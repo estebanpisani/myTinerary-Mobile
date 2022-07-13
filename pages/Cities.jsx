@@ -76,17 +76,26 @@ const Cities = () => {
         // eslint-disable-next-line
     }, [search]);
 
-    let results = useSelector(store => store.cityReducer.filteredCities);
-
     return (
         <ImageBackground style={styles.heroContainer} source={bgCities} resizeMethod='auto' resizeMode="cover" >
-            {cities?.map((city, i) =>
-                <View>
-                    <Image source={city.image} />
-                    <Text>{city.name}</Text>
-                    <Text>{city.country}</Text>
-                </View>
-            )}
+            {cities.lenght>0 &&
+                <FlatList
+                    data={cities}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <View style={{ width: '80%' }}>
+                                <View style={{
+                                    borderRadius: 34, backgroundColor: '#fff',
+                                    alignItems: 'center'
+                                }}>
+                                    <Image source={{ uri: item.image }} style={{ width: 100, height: 300 }} />
+                                    <Text style={{ fontSize: 25, color: 'black', fontWeight: 'bold' }}>{item.name}</Text>
+                                </View>
+                            </View>
+                        )
+                    }}
+                />
+            }
         </ImageBackground>
     );
 }
