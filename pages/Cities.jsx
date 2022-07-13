@@ -1,4 +1,4 @@
-import { StyleSheet, View, ImageBackground, FlatList, useWindowDimensions, ScrollView } from "react-native";
+import { StyleSheet, View, ImageBackground, FlatList, useWindowDimensions, ScrollView, TextInput } from "react-native";
 import { useState, useEffect } from 'react';
 import { Text } from "@react-native-material/core";
 import bgCities from './../assets/cities-cards.jpg'
@@ -42,12 +42,20 @@ const Cities = () => {
             }
         },
         filterContainer: {
-            height: '15%',
-            justifyContent: 'space-around',
+            flexDirection:'row',
+            height: '12%',
+            justifyContent: 'center',
             width: '100%',
             alignItems: 'center',
             backgroundColor: "#00695c",
-            
+
+        },
+        input: {
+            borderWidth: 1,
+            backgroundColor: "white",
+            width:'60%',
+            height:40,
+            padding:10
         },
         heroContainer: {
             display: 'flex',
@@ -100,13 +108,16 @@ const Cities = () => {
         <ScrollView>
             <View style={{ width: width }}>
                 <ImageBackground style={styles.heroContainer} source={bgCities} resizeMethod='auto' resizeMode="cover" >
-
-                    <View style={styles.filterContainer}>
-                        <Text>Find Cities</Text>
+                    <View style={styles.filterContainer}>          
+                        <TextInput
+                            style={styles.input}
+                            // onChangeText={onChangeNumber}
+                            placeholder="Try searching 'Bariloche'"
+                            keyboardType="default"
+                        />
+                        {/* <Text style={{marginLeft:10}}>🔎</Text> */}
                     </View>
-
-
-                    <View style={{ height: '80%' }}>
+                    <View style={{ height: '85%' }}>
                         <FlatList
                             style={styles.countriesContainer}
                             data={cities}
