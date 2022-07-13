@@ -36,7 +36,7 @@ export default function App() {
     <Provider store={store}>
         <View style={styles.content}>
           <StatusBar />
-          <Home />
+          <Cities />
         </View>
     </Provider>
   );
