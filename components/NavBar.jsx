@@ -1,24 +1,44 @@
-import { StyleSheet, ScrollView, View, Button, TouchableHighlight, ImageBackground, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 
 const NavBar = () => {
     const styles = {
         navContainer: {
             display: 'flex',
             flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems:'center',
-            backgroundColor: '#00695c',
-            minWidth:'100%',
-            maxWidth: '100%',
+            alignItems: 'center',
+            backgroundColor: '#000',
+            minWidth: '100%',
             height: '100%',
-            padding: 20
+        },
+        navItem: {
+            backgroundColor: '#00695c',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flex: 1
+        },
+        borderEnd: {
+            borderEndWidth: 1,
+            borderColor: 'white',
         }
     }
     return (
         <View style={styles.navContainer}>
-            <Text>Home</Text>
-            <Text>Cities</Text>
-            <Text>Account</Text>
+            <TouchableOpacity underlayColor="#000" activeOpacity={0.8} style={[styles.navItem, styles.borderEnd]}>
+                <Text >
+                    Home
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity underlayColor="#000" activeOpacity={0.8} style={[styles.navItem, styles.borderEnd]}>
+                <Text >
+                    Cities
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity underlayColor="#000" activeOpacity={0.8} style={[styles.navItem]}>
+                <Text >
+                    Account
+                </Text>
+            </TouchableOpacity>
         </View>
     )
 }
