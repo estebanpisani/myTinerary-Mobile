@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, View, ImageBackground, FlatList, useWindowDimensions, ScrollView, TextInput, TouchableOpacity } from "react-native";
+import { ActivityIndicator, StyleSheet, View, ImageBackground, useWindowDimensions, ScrollView, TextInput, TouchableOpacity } from "react-native";
 import { Text } from "@react-native-material/core";
 import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from 'react';

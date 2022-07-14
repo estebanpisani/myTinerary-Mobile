@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, View, ImageBackground, FlatList, useWindowDimensions, ScrollView, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, View, ImageBackground, useWindowDimensions, ScrollView, Image, TouchableOpacity } from "react-native";
 import { useEffect } from 'react';
 import { useNavigation } from "@react-navigation/native";
 import { Text } from "@react-native-material/core";
@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import cityActions from '../redux/actions/cityActions';
 import itineraryActions from '../redux/actions/itineraryActions';
 
-const City = ({route}) => {
+const City = ({ route }) => {
     const cityID = route.params.id;
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -147,33 +147,33 @@ const City = ({route}) => {
                     <View style={styles.itinerariesContainer}>
                         {itineraries.map((itinerary, i) => {
                             return (
-                                <View style={styles.itinerary} key={i}>
-                                    <View style={{ height: '50%', justifyContent: 'center', paddingHorizontal: 40 }} >
-                                        <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 20, textAlign: 'center', marginBottom: 10 }]} >{itinerary.title}</Text>
-                                        <Text style={[styles.fonts.slogan, styles.text.light, { fontSize: 10, textAlign: 'center' }]} >{itinerary.description}</Text>
-                                    </View>
-                                    <View style={styles.userInfo}>
-                                        <Image source={{ uri: itinerary.userPhoto }} style={styles.userImage} resizeMethod='auto' resizeMode='cover' />
-                                        <View style={{ height: '100%', justifyContent: 'space-between' }}>
-                                            <Text style={{ fontSize: 20, textAlign: 'center', color: 'white' }}>{itinerary.userName}</Text>
-                                            <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Duration: {itinerary.duration}hs</Text>
-                                            <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Price: ${itinerary.price}</Text>
-                                            <TouchableOpacity underlayColor="#000" activeOpacity={0.6}>
-                                                <View style={styles.btnMoreInfo.container}>
-                                                    <Text style={styles.btnMoreInfo.text}>
-                                                        More Info
-                                                    </Text>
-                                                </View>
-                                            </TouchableOpacity>
+                                    <View style={styles.itinerary} key={i} >
+                                        <View style={{ height: '50%', justifyContent: 'center', paddingHorizontal: 40 }} >
+                                            <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 20, textAlign: 'center', marginBottom: 10 }]} >{itinerary.title}</Text>
+                                            <Text style={[styles.fonts.slogan, styles.text.light, { fontSize: 10, textAlign: 'center' }]} >{itinerary.description}</Text>
+                                        </View>
+                                        <View style={styles.userInfo}>
+                                            <Image source={{ uri: itinerary.userPhoto }} style={styles.userImage} resizeMethod='auto' resizeMode='cover' />
+                                            <View style={{ height: '100%', justifyContent: 'space-between' }}>
+                                                <Text style={{ fontSize: 20, textAlign: 'center', color: 'white' }}>{itinerary.userName}</Text>
+                                                <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Duration: {itinerary.duration}hs</Text>
+                                                <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Price: ${itinerary.price}</Text>
+                                                <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => navigation.navigate("Itinerary", { id: itinerary._id })}>
+                                                    <View style={styles.btnMoreInfo.container}>
+                                                        <Text style={styles.btnMoreInfo.text}>
+                                                            More Info
+                                                        </Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            </View>
                                         </View>
                                     </View>
-                                </View>
                             )
                         })}
                     </View>
                     :
-                    <View style={{ backgroundColor: 'rgba(0,0,0,0.5)', height: height*3/4, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{color:'white', fontSize:40, textAlign:'center'}}>No available itineraries</Text>
+                    <View style={{ backgroundColor: 'rgba(0,0,0,0.5)', height: height * 3 / 4, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ color: 'white', fontSize: 40, textAlign: 'center' }}>No available itineraries</Text>
                     </View>
 
                 }

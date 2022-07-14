@@ -10,14 +10,14 @@ const Tab = createBottomTabNavigator();
 export default function Tabs() {
     return (
         <Tab.Navigator
-            initialRouteName='Stack'
+            initialRouteName='Home'
             screenOptions={{
                 tabBarActiveTintColor: 'white',
                 tabBarInactiveTintColor: 'black',
                 tabBarStyle: { height: 45, backgroundColor: '#00695c' }
             }}>
             <Tab.Screen
-                name='Stack'
+                name='Home'
                 component={Stack}
                 options={{
                     headerShown: false,
