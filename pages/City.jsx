@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, View, ImageBackground, FlatList, useWindowDimensions, ScrollView, Image, TouchableOpacity } from "react-native";
+import {Button, ActivityIndicator, StyleSheet, View, ImageBackground, FlatList, useWindowDimensions, ScrollView, Image, TouchableOpacity } from "react-native";
 import { useState, useEffect } from 'react';
 import { Text } from "@react-native-material/core";
 import bgCity from './../assets/city-body.jpg'
@@ -8,8 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import cityActions from './../redux/actions/cityActions';
 import itineraryActions from '../redux/actions/itineraryActions';
 
-const City = () => {
-    const cityID = '62a8e658e9d388724d1b4f79'
+const City = ({ route, navigation }) => {
+    const cityID = route.params.id
     const dispatch = useDispatch();
     const { height, width } = useWindowDimensions();
     const [search, setSearch] = useState('');
@@ -121,6 +121,7 @@ const City = () => {
         <ScrollView>
             <View style={{ width: width }}>
                 <ImageBackground style={styles.itinerariesSection} source={bgCity} resizeMethod='auto' resizeMode="cover" >
+                    <Button title="Go back" onPress={() => navigation.goBack()} />
                     {/* <View style={{ height: '20%', width: width }}> */}
                     {city &&
                         <View style={styles.citySection}>

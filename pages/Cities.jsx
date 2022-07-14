@@ -6,7 +6,7 @@ import bgCities from './../assets/cities-cards.jpg'
 import { useDispatch, useSelector } from 'react-redux';
 import cityActions from './../redux/actions/cityActions';
 
-const Cities = () => {
+const Cities = ({ navigation }) => {
     const dispatch = useDispatch();
     const { height, width } = useWindowDimensions();
     const [search, setSearch] = useState('');
@@ -115,7 +115,7 @@ const Cities = () => {
                                 data={results}
                                 renderItem={({ item }) => {
                                     return (
-                                        <TouchableOpacity underlayColor="#000" activeOpacity={0.6}>
+                                        <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={navigation.navigate('City',{id:item._id})}>
                                             <ImageBackground source={{ uri: item.image }} style={styles.cityContainer}>
                                                 <View style={styles.city} >
                                                     <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { textAlign: 'center', fontSize: 40 }]} >{item.name}</Text>
