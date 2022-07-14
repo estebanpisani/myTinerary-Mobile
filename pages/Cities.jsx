@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, View, ImageBackground, FlatList, useWindowDimensions, ScrollView, TextInput } from "react-native";
+import { ActivityIndicator, StyleSheet, View, ImageBackground, FlatList, useWindowDimensions, ScrollView, TextInput, TouchableOpacity  } from "react-native";
 import { useState, useEffect } from 'react';
 import { Text } from "@react-native-material/core";
 import bgCities from './../assets/cities-cards.jpg'
@@ -65,21 +65,19 @@ const Cities = () => {
             width: width,
             flex: 1
         },
-        countriesContainer: {
-            display: 'flex',
+        citiesContainer: {
             width: width,
             height: '100%',
             paddingHorizontal: 40
         },
-        countryContainer: {
+        cityContainer: {
             width: "100%",
             height: 150,
-            marginVertical: 20
+            marginVertical: 15
         },
-        country: {
+        city: {
             width: "100%",
             height: '100%',
-            textAlign: 'center',
             alignItems: 'center',
             justifyContent: 'space-evenly',
             backgroundColor: 'rgba(0,0,0,0.09)'
@@ -111,25 +109,27 @@ const Cities = () => {
                         {/* <Text style={{marginLeft:10}}>🔎</Text> */}
                     </View>
                     <View style={{ height: '85%' }}>
-                        {cities.length>0 ? 
+                        {cities.length > 0 ?
                             <FlatList
-                                style={styles.countriesContainer}
+                                style={styles.citiesContainer}
                                 data={results}
                                 renderItem={({ item }) => {
                                     return (
-                                        <ImageBackground source={{ uri: item.image }} style={styles.countryContainer}>
-                                            <View style={styles.country} >
-                                                <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, styles.text.center, { fontSize: 40 }]} >{item.name}</Text>
-                                                <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, styles.text.center, { fontSize: 30 }]}>{item.country}</Text>
-                                            </View>
-                                        </ImageBackground>
+                                        <TouchableOpacity underlayColor="#000" activeOpacity={0.6}>
+                                            <ImageBackground source={{ uri: item.image }} style={styles.cityContainer}>
+                                                <View style={styles.city} >
+                                                    <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { textAlign: 'center', fontSize: 40 }]} >{item.name}</Text>
+                                                    <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { textAlign: 'center', fontSize: 30 }]}>{item.country}</Text>
+                                                </View>
+                                            </ImageBackground>
+                                        </TouchableOpacity>
                                     )
                                 }}
-                            /> : 
-                            <View styles={{borderWidth:4, backgroundColor: 'rgba(0,0,0,0.5)', height:height, width:'100%', justifyContent:'center', alignItems:'center'}}>
+                            /> :
+                            <View styles={{ borderWidth: 4, backgroundColor: 'rgba(0,0,0,0.5)', height: height, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
                                 <ActivityIndicator size="large" color="#00695c" />
-                                <Text>Loading Cities...</Text>                           
-                            </View>           
+                                <Text>Loading Cities...</Text>
+                            </View>
                         }
                     </View>
                 </ImageBackground>

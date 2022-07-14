@@ -1,4 +1,4 @@
-import { StyleSheet, useWindowDimensions, ImageBackground, View, ScrollView, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, useWindowDimensions, ImageBackground, View, Text, TouchableOpacity } from 'react-native';
 import heroBg from './../assets/home-hero.jpg'
 
 const Hero = () => {
@@ -52,23 +52,22 @@ const Hero = () => {
             backgroundColor: '#00000030',
             paddingVertical: 85
         },
-        buttons: {
-            cta1: {
-                container: {
-                    paddingHorizontal: 20,
-                    borderWidth: 2,
-                    borderColor: 'white',
-                    backgroundColor: '#00695c',
-                    textAlign: "center",
-                    justifyContent: 'center',
-                    height: 45
-                },
-                text: {
-                    textTransform: "uppercase",
-                    color: 'white'
-                }
+        cta: {
+            container: {
+                paddingHorizontal: 20,
+                borderWidth: 2,
+                borderColor: 'white',
+                backgroundColor: '#00695c',
+                textAlign: "center",
+                justifyContent: 'center',
+                height: 45
+            },
+            text: {
+                textTransform: "uppercase",
+                color: 'white'
             }
         }
+
     });
 
     return (
@@ -80,8 +79,8 @@ const Hero = () => {
                     their cities!
                 </Text>
                 <TouchableOpacity underlayColor="#000" activeOpacity={0.6}>
-                    <View style={styles.buttons.cta1.container}>
-                        <Text style={styles.buttons.cta1.text}>
+                    <View style={styles.cta.container}>
+                        <Text style={styles.cta.text}>
                             Get Started!
                         </Text>
                     </View>

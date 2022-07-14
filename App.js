@@ -1,11 +1,8 @@
 import { StyleSheet, ScrollView, View, StatusBar } from 'react-native';
-// import { StatusBar } from 'expo-status-bar';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import mainReducer from './redux/reducers/mainReducer'
 import { useWindowDimensions } from 'react-native';
-// import * as eva from '@eva-design/eva';
-// import { ApplicationProvider, Layout } from '@ui-kitten/components';
 import Cities from './pages/Cities';
 import City from './pages/City';
 import Home from './pages/Home';
@@ -37,7 +34,7 @@ export default function App() {
     <Provider store={store}>
         <View style={styles.content}>
           <StatusBar />
-          <City />
+          <Cities />
         </View>
     </Provider>
   );
