@@ -1,9 +1,10 @@
 import { StyleSheet, useWindowDimensions, ImageBackground, View, Text, TouchableOpacity } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
 import heroBg from './../assets/home-hero.jpg'
 
-const Hero = ({ navigation }) => {
+const Hero = () => {
     const { height, width } = useWindowDimensions();
-
+    const navigation = useNavigation();
     const styles = StyleSheet.create({
         fonts: {
             title: { fontSize: 50 },
@@ -78,7 +79,7 @@ const Hero = ({ navigation }) => {
                 <Text style={[styles.fonts.normal, styles.text.light, styles.text.center, styles.text.shadowPrimary]}>Designed by insiders who know and love
                     their cities!
                 </Text>
-                <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={navigation.navigate('Cities')}>
+                <TouchableOpacity underlayColor="#000" activeOpacity={0.6}  onPress={()=>navigation.navigate("Cities")}>
                     <View style={styles.cta.container}>
                         <Text style={styles.cta.text}>
                             Get Started!

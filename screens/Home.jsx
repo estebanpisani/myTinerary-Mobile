@@ -2,12 +2,11 @@ import { View, ScrollView } from 'react-native';
 import Hero from '../components/Hero';
 import CarouselSection from '../components/CarouselSection';
 
-const Home = ({ navigation }) => {
-
+const Home = () => {
     return (
         <ScrollView>
             <View>
-                <Hero navigation={navigation} />
+                <Hero  />
             </View>
             <View>
                 <CarouselSection />

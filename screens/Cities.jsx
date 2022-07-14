@@ -1,14 +1,16 @@
 import { ActivityIndicator, StyleSheet, View, ImageBackground, FlatList, useWindowDimensions, ScrollView, TextInput, TouchableOpacity } from "react-native";
-import { useState, useEffect } from 'react';
 import { Text } from "@react-native-material/core";
+import { useNavigation } from "@react-navigation/native";
+import { useState, useEffect } from 'react';
 import bgCities from './../assets/cities-cards.jpg'
 
 import { useDispatch, useSelector } from 'react-redux';
-import cityActions from './../redux/actions/cityActions';
+import cityActions from '../redux/actions/cityActions';
 
 const Cities = () => {
     const dispatch = useDispatch();
     const { height, width } = useWindowDimensions();
+    const navigation = useNavigation();
     const [search, setSearch] = useState('');
     const styles = StyleSheet.create({
         fonts: {
@@ -41,22 +43,18 @@ const Cities = () => {
                 textShadowRadius: 3
             }
         },
-        heroContainer: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            height: height,
+        CitiesSection: {
             width: width,
-            flex: 1
+            height: height,
+            flexGrow: 1
         },
         filterContainer: {
             flexDirection: 'row',
-            height: '12%',
             justifyContent: 'center',
-            width: '100%',
             alignItems: 'center',
             backgroundColor: "#00695c",
-
+            height: height / 8,
+            width: width,
         },
         input: {
             borderWidth: 1,
@@ -66,9 +64,10 @@ const Cities = () => {
             padding: 10
         },
         citiesContainer: {
-            width: width,
-            flexGrow: 2,
-            paddingHorizontal: 40
+            paddingHorizontal: 40,
+            paddingBottom: 50,
+            minHeight: height / 2,
+            padding: 10
         },
         cityContainer: {
             width: "100%",
@@ -96,43 +95,40 @@ const Cities = () => {
     let results = useSelector(store => store.cityReducer.filteredCities);
 
     return (
-        <ScrollView >
-            <ImageBackground style={styles.heroContainer} source={bgCities} resizeMethod='auto' resizeMode="cover" >
-                <View style={styles.filterContainer}>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={setSearch}
-                        placeholder="Try searching 'Bariloche'"
-                        keyboardType="default"
-                    />
-                    {/* <Text style={{marginLeft:10}}>🔎</Text> */}
-                </View>
-                <View style={{ height: '85%', flewGrow: 1 }}>
-                    {cities.length > 0 ?
-                        <FlatList
-                            style={styles.citiesContainer}
-                            data={results}
-                            renderItem={({ item }) => {
-                                return (
-                                    <TouchableOpacity underlayColor="#000" activeOpacity={0.6} >
-                                        <ImageBackground source={{ uri: item.image }} style={styles.cityContainer}>
-                                            <View style={styles.city} >
-                                                <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { textAlign: 'center', fontSize: 40 }]} >{item.name}</Text>
-                                                <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { textAlign: 'center', fontSize: 30 }]}>{item.country}</Text>
-                                            </View>
-                                        </ImageBackground>
-                                    </TouchableOpacity>
-                                )
-                            }}
-                        /> :
-                        <View styles={{ borderWidth: 4, backgroundColor: 'rgba(0,0,0,0.5)', height: height, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                            <ActivityIndicator size="large" color="#00695c" />
-                            <Text>Loading Cities...</Text>
-                        </View>
-                    }
-                </View>
-            </ImageBackground>
-        </ScrollView>
+        <ImageBackground style={styles.CitiesSection} source={bgCities} resizeMethod='auto' resizeMode="cover" >
+            <View style={styles.filterContainer}>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={setSearch}
+                    placeholder="Try searching 'Bariloche'"
+                    keyboardType="default"
+                />
+                {/* <Text style={{marginLeft:10}}>🔎</Text> */}
+            </View>
+            <ScrollView >
+                {cities.length > 0 ?
+                    <View style={styles.citiesContainer}>                 
+                        {results.map((item, i) => {
+                            return (
+                        <TouchableOpacity key={i} underlayColor="#000" activeOpacity={0.6} onPress={() => navigation.navigate("City", {id: item._id})} >
+                            <ImageBackground source={{ uri: item.image }} style={styles.cityContainer}>
+                                <View style={styles.city} >
+                                    <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { textAlign: 'center', fontSize: 40 }]} >{item.name}</Text>
+                                    <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { textAlign: 'center', fontSize: 30 }]}>{item.country}</Text>
+                                </View>
+                            </ImageBackground>
+                        </TouchableOpacity>
+                        )
+                        })}
+                    </View>
+                    :
+                    <View style={{ backgroundColor: 'rgba(0,0,0,0.5)', height: height*7/8, width: width, justifyContent: 'center', alignItems: 'center' }}>
+                        <ActivityIndicator size="large" color="white" />
+                        <Text style={{ color: 'white', fontSize: 40 }}>Loading Cities...</Text>
+                    </View>
+                }
+            </ScrollView>
+        </ImageBackground >
     );
 }
 
