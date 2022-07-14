@@ -1,4 +1,4 @@
-import { StyleSheet, View, ImageBackground, FlatList, useWindowDimensions, ScrollView, TextInput } from "react-native";
+import { ActivityIndicator, StyleSheet, View, ImageBackground, FlatList, useWindowDimensions, ScrollView, TextInput } from "react-native";
 import { useState, useEffect } from 'react';
 import { Text } from "@react-native-material/core";
 import bgCities from './../assets/cities-cards.jpg'
@@ -7,9 +7,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import cityActions from './../redux/actions/cityActions';
 
 const Cities = () => {
+    const dispatch = useDispatch();
     const { height, width } = useWindowDimensions();
     const [search, setSearch] = useState('');
-
     const styles = StyleSheet.create({
         fonts: {
             title: { fontSize: 50 },
@@ -42,7 +42,7 @@ const Cities = () => {
             }
         },
         filterContainer: {
-            flexDirection:'row',
+            flexDirection: 'row',
             height: '12%',
             justifyContent: 'center',
             width: '100%',
@@ -53,9 +53,9 @@ const Cities = () => {
         input: {
             borderWidth: 1,
             backgroundColor: "white",
-            width:'60%',
-            height:40,
-            padding:10
+            width: '60%',
+            height: 40,
+            padding: 10
         },
         heroContainer: {
             display: 'flex',
@@ -86,11 +86,6 @@ const Cities = () => {
         }
     });
 
-    const dispatch = useDispatch();
-
-    function handleSearch(event) {
-        setSearch(event.target.value);
-    }
     useEffect(() => {
         dispatch(cityActions.getCities());
         // eslint-disable-next-line
@@ -99,39 +94,43 @@ const Cities = () => {
         dispatch(cityActions.filterCities(search));
         // eslint-disable-next-line
     }, [search]);
-
     let cities = useSelector(store => store.cityReducer.cities);
-    // let results = useSelector(store => store.cityReducer.filteredCities);
-
+    let results = useSelector(store => store.cityReducer.filteredCities);
 
     return (
         <ScrollView>
             <View style={{ width: width }}>
                 <ImageBackground style={styles.heroContainer} source={bgCities} resizeMethod='auto' resizeMode="cover" >
-                    <View style={styles.filterContainer}>          
+                    <View style={styles.filterContainer}>
                         <TextInput
                             style={styles.input}
-                            // onChangeText={onChangeNumber}
+                            onChangeText={setSearch}
                             placeholder="Try searching 'Bariloche'"
                             keyboardType="default"
                         />
                         {/* <Text style={{marginLeft:10}}>🔎</Text> */}
                     </View>
                     <View style={{ height: '85%' }}>
-                        <FlatList
-                            style={styles.countriesContainer}
-                            data={cities}
-                            renderItem={({ item }) => {
-                                return (
-                                    <ImageBackground source={{ uri: item.image }} style={styles.countryContainer}>
-                                        <View style={styles.country} >
-                                            <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, styles.text.center, { fontSize: 40 }]} >{item.name}</Text>
-                                            <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, styles.text.center, { fontSize: 30 }]}>{item.country}</Text>
-                                        </View>
-                                    </ImageBackground>
-                                )
-                            }}
-                        />
+                        {cities.length>0 ? 
+                            <FlatList
+                                style={styles.countriesContainer}
+                                data={results}
+                                renderItem={({ item }) => {
+                                    return (
+                                        <ImageBackground source={{ uri: item.image }} style={styles.countryContainer}>
+                                            <View style={styles.country} >
+                                                <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, styles.text.center, { fontSize: 40 }]} >{item.name}</Text>
+                                                <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, styles.text.center, { fontSize: 30 }]}>{item.country}</Text>
+                                            </View>
+                                        </ImageBackground>
+                                    )
+                                }}
+                            /> : 
+                            <View styles={{borderWidth:4, backgroundColor: 'rgba(0,0,0,0.5)', height:height, width:'100%', justifyContent:'center', alignItems:'center'}}>
+                                <ActivityIndicator size="large" color="#00695c" />
+                                <Text>Loading Cities...</Text>                           
+                            </View>           
+                        }
                     </View>
                 </ImageBackground>
             </View>
