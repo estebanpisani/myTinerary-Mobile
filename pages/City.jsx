@@ -45,18 +45,14 @@ const City = () => {
         },
         itinerariesSection: {
             width: width,
-            height: height
+            height: height,
+            flexGrow: 1
         },
         cityContainer: {
-            height: '50%',
-            width: '100%',
-            borderWidth: 4,
-            justifyContent: 'center',
-            alignItems: 'center'
-        },
-        cityDescription: {
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            padding: 7
+            height: height / 5,
+            width: width,
+            alignItems: 'center',
+            justifyContent: 'center'
         },
         itinerariesContainer: {
             minHeight: height / 2,
@@ -115,10 +111,10 @@ const City = () => {
     let itineraries = useSelector(store => store.itineraryReducer.itineraries);
 
     return (
-        <ImageBackground style={[styles.itinerariesSection, { flexGrow: 1 }]} source={bgCity} resizeMethod='auto' resizeMode="cover" >
+        <ImageBackground style={styles.itinerariesSection} source={bgCity} resizeMethod='auto' resizeMode="cover" >
             <ScrollView >
                 {city &&
-                    <ImageBackground source={{ uri: city.image }} style={{ height: height / 5, width: width, alignItems: 'center', justifyContent: 'center' }} resizeMethod='auto' resizeMode="cover" >
+                    <ImageBackground source={{ uri: city.image }} style={styles.cityContainer} resizeMethod='auto' resizeMode="cover" >
                         <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 40 }]}>{city.name}</Text>
                     </ImageBackground>
                 }
@@ -128,7 +124,7 @@ const City = () => {
                             <View style={styles.itinerary} >
                                 <View style={{ height: '50%', justifyContent: 'center', paddingHorizontal: 40 }} >
                                     <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 20, textAlign: 'center', marginBottom: 10 }]} >{itinerary.title}</Text>
-                                    <Text style={[styles.fonts.slogan, styles.text.light, { fontSize: 10, textAlign: 'justify' }]} >{itinerary.description}</Text>
+                                    <Text style={[styles.fonts.slogan, styles.text.light, { fontSize: 10, textAlign: 'center' }]} >{itinerary.description}</Text>
                                 </View>
                                 <View style={styles.userInfo}>
                                     <Image source={{ uri: itinerary.userPhoto }} style={styles.userImage} resizeMethod='auto' resizeMode='cover' />
