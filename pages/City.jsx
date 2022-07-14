@@ -59,9 +59,8 @@ const City = () => {
             padding: 7
         },
         itinerariesContainer: {
-            width: '100%',
-            height: 600,
-            paddingHorizontal: 10
+            minHeight: height / 2,
+            padding: 10
         },
         itinerary: {
             width: "100%",
@@ -71,7 +70,6 @@ const City = () => {
             backgroundColor: 'rgba(0,0,0,0.7)',
             marginVertical: 10,
             borderRadius: 25,
-            // paddingVertical: 15
         },
         userInfo: {
             flexDirection: 'row',
@@ -98,7 +96,7 @@ const City = () => {
                 backgroundColor: '#00695c',
                 textAlign: "center",
                 justifyContent: 'center',
-                alignItems:'center',
+                alignItems: 'center',
                 height: 40,
             },
             text: {
@@ -124,76 +122,36 @@ const City = () => {
                         <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 40 }]}>{city.name}</Text>
                     </ImageBackground>
                 }
-                <View style={{ minHeight: height, padding: 10 }}>
-                    {itineraries.length > 0 &&
-                        itineraries.map((itinerary, i) => {
-                            return (
-                                <View style={styles.itinerary} >
-                                    <View style={{height:'50%', justifyContent:'center', paddingHorizontal: 40 }} >
-                                        <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 20, textAlign: 'center', marginBottom: 10 }]} >{itinerary.title}</Text>
-                                        <Text style={[styles.fonts.slogan, styles.text.light, { fontSize: 10, textAlign: 'justify' }]} >{itinerary.description}</Text>
-                                    </View>
-                                    <View style={styles.userInfo}>
-                                        <Image source={{ uri: itinerary.userPhoto }} style={styles.userImage} resizeMethod='auto' resizeMode='cover' />
-                                        <View style={{ height: '100%', justifyContent: 'space-between' }}>
-                                            <Text style={{ fontSize: 20, textAlign: 'center', color: 'white' }}>{itinerary.userName}</Text>
-                                            <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Duration: {itinerary.duration}hs</Text>
-                                            <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Price: ${itinerary.price}</Text>
-                                            <TouchableOpacity underlayColor="#000" activeOpacity={0.6}>
-                                                <View style={styles.cta.container}>
-                                                    <Text style={styles.cta.text}>
-                                                        More Info
-                                                    </Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-
+                <View style={styles.itinerariesContainer}>
+                    {itineraries.length > 0 && itineraries.map((itinerary, i) => {
+                        return (
+                            <View style={styles.itinerary} >
+                                <View style={{ height: '50%', justifyContent: 'center', paddingHorizontal: 40 }} >
+                                    <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 20, textAlign: 'center', marginBottom: 10 }]} >{itinerary.title}</Text>
+                                    <Text style={[styles.fonts.slogan, styles.text.light, { fontSize: 10, textAlign: 'justify' }]} >{itinerary.description}</Text>
                                 </View>
-                            )
-                        })
-                    }
+                                <View style={styles.userInfo}>
+                                    <Image source={{ uri: itinerary.userPhoto }} style={styles.userImage} resizeMethod='auto' resizeMode='cover' />
+                                    <View style={{ height: '100%', justifyContent: 'space-between' }}>
+                                        <Text style={{ fontSize: 20, textAlign: 'center', color: 'white' }}>{itinerary.userName}</Text>
+                                        <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Duration: {itinerary.duration}hs</Text>
+                                        <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Price: ${itinerary.price}</Text>
+                                        <TouchableOpacity underlayColor="#000" activeOpacity={0.6}>
+                                            <View style={styles.cta.container}>
+                                                <Text style={styles.cta.text}>
+                                                    More Info
+                                                </Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </View>
+                        )
+                    })}
                 </View>
-
             </ScrollView>
         </ImageBackground>
     );
 }
 
-
-// {itineraries.length > 0 ?
-//     <FlatList
-//         data={itineraries}
-//         style={styles.itinerariesContainer}
-//         renderItem={({ item }) => {
-//             return (
-//                 <View style={styles.itinerary} >
-//                     <View style={{ padding: 10 }}>
-//                         <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 40, textAlign: 'center', marginBottom: 10 }]} >{item.title}</Text>
-//                         <Text style={[styles.fonts.slogan, styles.text.light, { fontSize: 15, textAlign: 'justify' }]} >{item.description}</Text>
-//                     </View>
-//                     <View style={styles.userInfo}>
-//                         <Image source={{ uri: item.userPhoto }} style={styles.userImage} resizeMethod='auto' resizeMode='cover' />
-//                         <View style={{ justifyContent: 'space-between' }}>
-//                             <Text style={{ fontSize: 20, textAlign: 'center', color: 'white' }}>{item.userName}</Text>
-//                             <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Duration: {item.duration}hs</Text>
-//                             <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Price: ${item.price}</Text>
-//                         </View>
-//                     </View>
-//                     <TouchableOpacity underlayColor="#000" activeOpacity={0.6}>
-//                         <View style={styles.cta.container}>
-//                             <Text style={styles.cta.text}>
-//                                 More Info
-//                             </Text>
-//                         </View>
-//                     </TouchableOpacity>
-//                 </View>
-//             )
-//         }}
-//     /> :
-//     <View styles={{ borderWidth: 4, backgroundColor: 'rgba(0,0,0,0.5)', height: height, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-//         <ActivityIndicator size="large" color="#00695c" />
-//         <Text>Loading Itineraries...</Text>
-//     </View>
-// }
 export default City;
