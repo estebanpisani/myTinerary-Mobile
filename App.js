@@ -7,6 +7,7 @@ import { useWindowDimensions } from 'react-native';
 // import * as eva from '@eva-design/eva';
 // import { ApplicationProvider, Layout } from '@ui-kitten/components';
 import Cities from './pages/Cities';
+import City from './pages/City';
 import Home from './pages/Home';
 // import NavBar from './components/NavBar';
 
@@ -36,7 +37,7 @@ export default function App() {
     <Provider store={store}>
         <View style={styles.content}>
           <StatusBar />
-          <Cities />
+          <City />
         </View>
     </Provider>
   );

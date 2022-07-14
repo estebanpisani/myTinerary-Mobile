@@ -1,7 +1,7 @@
 const initialState = {
     cities: [],
     filteredCities: [],
-    city: {}
+    city: null
 };
 
 const cityReducer = (state=initialState, action) => {
@@ -15,6 +15,7 @@ const cityReducer = (state=initialState, action) => {
             };
         
         case 'GET_CITY_BY_ID':
+            // let city = state.cities.filter(city => city._id === action.payload)
             return {
                 ...state,
                 city: action.payload,
