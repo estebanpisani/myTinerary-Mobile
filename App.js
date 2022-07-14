@@ -39,13 +39,14 @@ export default function App() {
     <Provider store={store}>
       <View style={styles.content}>
         <StatusBar />
-        <NavigationContainer>
+        <City />
+        {/* <NavigationContainer>
           <Stack.Navigator>
             {/* <Stack.Screen name="Home" component={Home} /> */}
-            <Stack.Screen name="Cities" component={Cities} />
-            <Stack.Screen name="City" component={City} />
-          </Stack.Navigator>
-        </NavigationContainer>
+            {/* <Stack.Screen name="Cities" component={Cities} /> */}
+            {/* <Stack.Screen name="City" component={City} /> */}
+          {/* </Stack.Navigator> */}
+        {/* </NavigationContainer> */}
       </View>
     </Provider>
   );

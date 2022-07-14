@@ -1,4 +1,4 @@
-import {Button, ActivityIndicator, StyleSheet, View, ImageBackground, FlatList, useWindowDimensions, ScrollView, Image, TouchableOpacity } from "react-native";
+import { Button, ActivityIndicator, StyleSheet, View, ImageBackground, FlatList, useWindowDimensions, ScrollView, Image, TouchableOpacity } from "react-native";
 import { useState, useEffect } from 'react';
 import { Text } from "@react-native-material/core";
 import bgCity from './../assets/city-body.jpg'
@@ -8,11 +8,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import cityActions from './../redux/actions/cityActions';
 import itineraryActions from '../redux/actions/itineraryActions';
 
-const City = ({ route, navigation }) => {
-    const cityID = route.params.id
+const City = () => {
+    const cityID = '62a8e7a4e9d388724d1b4f82'
     const dispatch = useDispatch();
     const { height, width } = useWindowDimensions();
-    const [search, setSearch] = useState('');
     const styles = StyleSheet.create({
         fonts: {
             title: { fontSize: 50 },
@@ -45,20 +44,14 @@ const City = ({ route, navigation }) => {
             }
         },
         itinerariesSection: {
-            display: 'flex',
-            alignItems: 'center',
             width: width,
-            height: height,
-            flex: 1
-        },
-        citySection: {
-            height: '30%',
-            width: '100%',
+            height: height
         },
         cityContainer: {
-            height: '100%',
+            height: '50%',
             width: '100%',
-            justifyContent: 'space-evenly',
+            borderWidth: 4,
+            justifyContent: 'center',
             alignItems: 'center'
         },
         cityDescription: {
@@ -66,15 +59,15 @@ const City = ({ route, navigation }) => {
             padding: 7
         },
         itinerariesContainer: {
-            width: width,
-            height: "100%",
+            width: '100%',
+            height: 600,
             paddingHorizontal: 10
         },
         itinerary: {
             width: "100%",
-            height: 400,
+            height: 300,
             alignItems: 'center',
-            justifyContent: 'space-evenly',
+            justifyContent: 'space-between',
             backgroundColor: 'rgba(0,0,0,0.7)',
             marginVertical: 10,
             borderRadius: 25,
@@ -82,25 +75,31 @@ const City = ({ route, navigation }) => {
         },
         userInfo: {
             flexDirection: 'row',
-            justifyContent: 'space-around',
+            justifyContent: 'space-evenly',
             alignItems: 'center',
-            height: 100,
+            height: '50%',
             width: '100%',
+            padding: 10,
+            borderBottomStartRadius: 25,
+            borderBottomEndRadius: 25,
+            backgroundColor: '#000'
         },
         userImage: {
-            height: '100%',
+            height: '70%',
             width: '30%',
             borderRadius: 50,
         },
         cta: {
             container: {
-                paddingHorizontal: 20,
+                paddingHorizontal: 10,
                 borderWidth: 2,
                 borderColor: 'white',
+                borderRadius: 5,
                 backgroundColor: '#00695c',
                 textAlign: "center",
                 justifyContent: 'center',
-                height: 45
+                alignItems:'center',
+                height: 40,
             },
             text: {
                 textTransform: "uppercase",
@@ -118,41 +117,28 @@ const City = ({ route, navigation }) => {
     let itineraries = useSelector(store => store.itineraryReducer.itineraries);
 
     return (
-        <ScrollView>
-            <View style={{ width: width }}>
-                <ImageBackground style={styles.itinerariesSection} source={bgCity} resizeMethod='auto' resizeMode="cover" >
-                    <Button title="Go back" onPress={() => navigation.goBack()} />
-                    {/* <View style={{ height: '20%', width: width }}> */}
-                    {city &&
-                        <View style={styles.citySection}>
-                            <ImageBackground source={{ uri: city.image }} style={styles.cityContainer} resizeMethod='auto' resizeMode="cover" >
-                                <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, styles.text.center, { fontSize: 40 }]}>{city.name}</Text>
-                                <View style={styles.cityDescription}>
-                                    <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 15, textAlign: 'center' }]}>{city.description}</Text>
-                                </View>
-                            </ImageBackground>
-                        </View>
-                    }
-                    <View style={{ height: '80%' }}>
-                        {itineraries.length > 0 ?
-                            <FlatList
-                                data={itineraries}
-                                style={styles.itinerariesContainer}
-                                renderItem={({ item }) => {
-                                    return (
-                                        <View style={styles.itinerary} >
-                                            <View style={{ padding: 10 }}>
-                                                <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 40, textAlign: 'center', marginBottom: 10 }]} >{item.title}</Text>
-                                                <Text style={[styles.fonts.slogan, styles.text.light, { fontSize: 15, textAlign: 'justify' }]} >{item.description}</Text>
-                                            </View>
-                                            <View style={styles.userInfo}>
-                                                <Image source={{ uri: item.userPhoto }} style={styles.userImage} resizeMethod='auto' resizeMode='cover' />
-                                                <View style={{ justifyContent: 'space-between' }}>
-                                                    <Text style={{ fontSize: 20, textAlign: 'center', color: 'white' }}>{item.userName}</Text>
-                                                    <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Duration: {item.duration}hs</Text>
-                                                    <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Price: ${item.price}</Text>
-                                                </View>
-                                            </View>
+        <ImageBackground style={[styles.itinerariesSection, { flexGrow: 1 }]} source={bgCity} resizeMethod='auto' resizeMode="cover" >
+            <ScrollView >
+                {city &&
+                    <ImageBackground source={{ uri: city.image }} style={{ height: height / 5, width: width, alignItems: 'center', justifyContent: 'center' }} resizeMethod='auto' resizeMode="cover" >
+                        <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 40 }]}>{city.name}</Text>
+                    </ImageBackground>
+                }
+                <View style={{ minHeight: height, padding: 10 }}>
+                    {itineraries.length > 0 &&
+                        itineraries.map((itinerary, i) => {
+                            return (
+                                <View style={styles.itinerary} >
+                                    <View style={{height:'50%', justifyContent:'center', paddingHorizontal: 40 }} >
+                                        <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 20, textAlign: 'center', marginBottom: 10 }]} >{itinerary.title}</Text>
+                                        <Text style={[styles.fonts.slogan, styles.text.light, { fontSize: 10, textAlign: 'justify' }]} >{itinerary.description}</Text>
+                                    </View>
+                                    <View style={styles.userInfo}>
+                                        <Image source={{ uri: itinerary.userPhoto }} style={styles.userImage} resizeMethod='auto' resizeMode='cover' />
+                                        <View style={{ height: '100%', justifyContent: 'space-between' }}>
+                                            <Text style={{ fontSize: 20, textAlign: 'center', color: 'white' }}>{itinerary.userName}</Text>
+                                            <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Duration: {itinerary.duration}hs</Text>
+                                            <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Price: ${itinerary.price}</Text>
                                             <TouchableOpacity underlayColor="#000" activeOpacity={0.6}>
                                                 <View style={styles.cta.container}>
                                                     <Text style={styles.cta.text}>
@@ -161,19 +147,53 @@ const City = ({ route, navigation }) => {
                                                 </View>
                                             </TouchableOpacity>
                                         </View>
-                                    )
-                                }}
-                            /> :
-                            <View styles={{ borderWidth: 4, backgroundColor: 'rgba(0,0,0,0.5)', height: height, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                                <ActivityIndicator size="large" color="#00695c" />
-                                <Text>Loading Itineraries...</Text>
-                            </View>
-                        }
-                    </View>
-                </ImageBackground>
-            </View>
-        </ScrollView>
+                                    </View>
+
+                                </View>
+                            )
+                        })
+                    }
+                </View>
+
+            </ScrollView>
+        </ImageBackground>
     );
 }
 
+
+// {itineraries.length > 0 ?
+//     <FlatList
+//         data={itineraries}
+//         style={styles.itinerariesContainer}
+//         renderItem={({ item }) => {
+//             return (
+//                 <View style={styles.itinerary} >
+//                     <View style={{ padding: 10 }}>
+//                         <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 40, textAlign: 'center', marginBottom: 10 }]} >{item.title}</Text>
+//                         <Text style={[styles.fonts.slogan, styles.text.light, { fontSize: 15, textAlign: 'justify' }]} >{item.description}</Text>
+//                     </View>
+//                     <View style={styles.userInfo}>
+//                         <Image source={{ uri: item.userPhoto }} style={styles.userImage} resizeMethod='auto' resizeMode='cover' />
+//                         <View style={{ justifyContent: 'space-between' }}>
+//                             <Text style={{ fontSize: 20, textAlign: 'center', color: 'white' }}>{item.userName}</Text>
+//                             <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Duration: {item.duration}hs</Text>
+//                             <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Price: ${item.price}</Text>
+//                         </View>
+//                     </View>
+//                     <TouchableOpacity underlayColor="#000" activeOpacity={0.6}>
+//                         <View style={styles.cta.container}>
+//                             <Text style={styles.cta.text}>
+//                                 More Info
+//                             </Text>
+//                         </View>
+//                     </TouchableOpacity>
+//                 </View>
+//             )
+//         }}
+//     /> :
+//     <View styles={{ borderWidth: 4, backgroundColor: 'rgba(0,0,0,0.5)', height: height, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+//         <ActivityIndicator size="large" color="#00695c" />
+//         <Text>Loading Itineraries...</Text>
+//     </View>
+// }
 export default City;
