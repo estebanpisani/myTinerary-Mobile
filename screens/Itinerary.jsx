@@ -18,8 +18,10 @@ const Itinerary = ({ route }) => {
     const navigation = useNavigation();
     const [activities, setActivities] = useState([]);
     const [change, setChange] = useState(false);
-    const [comment, setComment] = useState('');
-    const user = null;
+    const [commentValue, setCommentValue] = useState('');
+    const [editID, setEditID] = useState('');
+    const [edit, setEdit] = useState(false);
+    const user = 'null';
     const { height, width } = useWindowDimensions();
     const styles = StyleSheet.create({
         fonts: {
@@ -93,21 +95,39 @@ const Itinerary = ({ route }) => {
             maxHeight: height / 2,
             width: '85%',
             padding: 10,
-            backgroundColor: 'rgba(0, 105, 92,0.95)',
+            backgroundColor: 'rgba(0, 105, 92,0.8)',
             marginBottom: 15,
             borderRadius: 10
 
+        },
+        commentBox: {
+            alignItems: 'center',
+            backgroundColor: 'rgba(255,255,255, 0.2)',
+            width: '100%',
+            // padding: 5,
+            marginBottom: 5,
+            borderRadius: 7,
+            justifyContent: 'space-between',
+            alignItems: 'center',
         },
         comment: {
             flexDirection: 'row',
             justifyContent: 'space-evenly',
             alignItems: 'center',
-            // height: '30%',
             width: '100%',
-            padding: 5,
-            backgroundColor: 'rgba(255,255,255, 0.2)',
-            marginBottom: 5,
-            borderRadius: 5,
+            marginVertical: 5
+            // height: '30%',
+        },
+        commentOptions: {
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            width: '100%',
+            borderBottomEndRadius: 7,
+            borderBottomStartRadius: 7,
+            paddingVertical: 5,
+            backgroundColor: 'rgb(0, 105, 92)'
+            // height: '30%',
         },
         commentImage: {
             height: 40,
@@ -196,13 +216,39 @@ const Itinerary = ({ route }) => {
     let itinerary = useSelector(store => store.itineraryReducer.itinerary);
 
     async function handleSubmitComment() {
-        if (comment !== '') {
-            await dispatch(itineraryActions.addComment(itinerary._id, comment));
+        if (commentValue !== '') {
+            await dispatch(itineraryActions.addComment(itinerary._id, commentValue));
         }
-        setComment('');
+        setCommentValue('');
         setChange(!change);
     }
 
+    const handleEdit = (commentID, comment) => {
+        setEdit(true);
+        setEditID(commentID);
+        setCommentValue(comment)
+    }
+
+    const closeEdit = () => {
+        setEdit(false);
+        setEditID('');
+        setCommentValue('');
+    }
+
+    async function handleSubmitEdit() {
+        setEdit(false)
+        if (commentValue !== '') {
+            await dispatch(itineraryActions.updateComment(editID, commentValue));
+        }
+        setEditID('');
+        setCommentValue('');
+        setChange(!change);
+    }
+
+    async function handleDelete(commentID) {
+        await dispatch(itineraryActions.deleteComment(commentID))
+        setChange(!change);
+    }
 
 
     return (
@@ -243,23 +289,56 @@ const Itinerary = ({ route }) => {
                                     <Text style={{ color: 'white', fontSize: 40, width: width, textAlign: 'center', backgroundColor: 'rgba(0,0,0,0.7)' }}>No available activities</Text>
                                 }
                             </View>
-                            <View style={{ backgroundColor: 'black', width: '85%', alignSelf: 'center', borderRadius: 5, marginBottom: 3, height: 30, justifyContent: 'center' }}>
-                                <Text style={{ color: 'white', textAlign: 'center' }} >Leave us a comment!</Text>
-                            </View>
+                            {activities.length > 0 &&
+                                <View style={{ backgroundColor: 'black', width: '85%', alignSelf: 'center', borderRadius: 5, marginBottom: 3, height: 30, justifyContent: 'center' }}>
+                                    <Text style={{ color: 'white', textAlign: 'center' }} >Leave us a comment!</Text>
+                                </View>
+                            }
 
                             {itinerary.comments.length > 0 &&
                                 <View style={styles.commentContainer}>
                                     <ScrollView nestedScrollEnabled contentOffset={{ x: 0, y: 3000 }}  >
                                         {itinerary.comments.map((comment, i) => {
                                             return (
-                                                <View style={styles.comment}>
-                                                    <Image source={{ uri: comment.user.userPhoto }} style={styles.commentImage} resizeMethod='auto' resizeMode='cover' />
-                                                    <View style={{ width: '70%', marginStart: 20, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
-                                                        <View style={{ width: '30%', alignItems: 'center' }}>
-                                                            <Text style={{ fontSize: 12, textAlign: 'center', color: 'rgb(2, 51, 46)' }}>{comment.user.firstName}</Text>
-                                                            <Text style={{ fontSize: 12, textAlign: 'center', color: 'rgb(2, 51, 46)' }}>{comment.user.lastName}</Text>
+                                                <View style={styles.commentBox}>
+                                                    <View style={styles.comment}>
+                                                        <Image source={{ uri: comment.user.userPhoto }} style={styles.commentImage} resizeMethod='auto' resizeMode='cover' />
+                                                        <View style={{ width: '70%', marginStart: 20, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
+                                                            <View style={{ width: '30%', alignItems: 'center' }}>
+                                                                <Text style={{ fontSize: 12, textAlign: 'center', color: 'rgb(2, 51, 46)' }}>{comment.user.firstName}</Text>
+                                                                <Text style={{ fontSize: 12, textAlign: 'center', color: 'rgb(2, 51, 46)' }}>{comment.user.lastName}</Text>
+                                                            </View>
+                                                            {edit && editID === comment._id ?
+                                                                <TextInput
+                                                                    style={[styles.input, {
+                                                                        width: '60%',
+                                                                        height: 30,
+                                                                        padding: 1,
+                                                                    }]}
+                                                                    onChangeText={text => setCommentValue(text)}
+                                                                    textAlign='center'
+                                                                    keyboardType="default"
+                                                                    defaultValue={commentValue}
+                                                                    onSubmitEditing={handleSubmitEdit}
+                                                                />
+                                                                :
+                                                                <Text style={{ width: '70%', fontSize: 10, textAlign: 'center', color: 'white', flexGrow: 1 }}>{comment.comment}</Text>
+                                                            }
                                                         </View>
-                                                        <Text style={{ width: '70%', fontSize: 10, textAlign: 'center', color: 'white', flexGrow: 1 }}>{comment.comment}</Text>
+                                                    </View>
+                                                    <View style={styles.commentOptions}>
+                                                        {edit && editID === comment._id ?
+                                                            <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => closeEdit()}>
+                                                                <Text style={{ fontSize: 12, textAlign: 'center', color: 'rgb(2, 51, 46)', marginHorizontal: 10 }}>CLOSE</Text>
+                                                            </TouchableOpacity>
+                                                            :
+                                                            <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => handleEdit(comment._id, comment.comment)}>
+                                                                <Text style={{ fontSize: 12, textAlign: 'center', color: 'rgb(2, 51, 46)', marginHorizontal: 10 }}>EDIT</Text>
+                                                            </TouchableOpacity>
+                                                        }
+                                                        <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => handleDelete(comment._id)}>
+                                                            <Text style={{ fontSize: 12, textAlign: 'center', color: 'rgb(2, 51, 46)', marginHorizontal: 10 }}>DELETE</Text>
+                                                        </TouchableOpacity>
                                                     </View>
                                                 </View>
 
@@ -268,21 +347,23 @@ const Itinerary = ({ route }) => {
                                     </ScrollView>
 
                                     <View style={styles.inputContainer}>
-                                        {user ?
+                                        {user && !edit &&
                                             <TextInput
                                                 style={styles.input}
-                                                onChangeText={text => setComment(text)}
+                                                onChangeText={text => setCommentValue(text)}
                                                 textAlign='center'
-                                                // onFocus={()=>setShow(false)}
                                                 placeholder="Tell us what you think about this itinerary!"
                                                 keyboardType="default"
-                                                defaultValue={comment}
+                                                defaultValue={commentValue}
                                                 onSubmitEditing={handleSubmitComment}
                                             />
-                                            :
+                                        }
+                                        {
+                                            (user === null && edit === false) &&
                                             <TouchableOpacity underlayColor="#000" activeOpacity={0.6} >
-                                                <Text style={{ color: 'white', justifyContent: 'center', textAlign: 'center', textDecorationLine: 'underline', fontSize:20 }}>Sign in to comment!</Text>
+                                                <Text style={{ color: 'white', justifyContent: 'center', textAlign: 'center', textDecorationLine: 'underline', fontSize: 20 }}>Sign in to comment!</Text>
                                             </TouchableOpacity>
+
                                         }
                                     </View>
                                 </View>

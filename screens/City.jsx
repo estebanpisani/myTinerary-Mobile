@@ -1,5 +1,5 @@
 import { StyleSheet, View, ImageBackground, useWindowDimensions, ScrollView, Image, TouchableOpacity } from "react-native";
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigation } from "@react-navigation/native";
 import { Text } from "@react-native-material/core";
 import bgCity from './../assets/city-body.jpg'
@@ -14,6 +14,8 @@ const City = ({ route }) => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const { height, width } = useWindowDimensions();
+    const [change, setChange] = useState(false);
+
     const styles = StyleSheet.create({
         fonts: {
             title: { fontSize: 50 },
@@ -66,24 +68,26 @@ const City = ({ route }) => {
             height: 250,
             alignItems: 'center',
             justifyContent: 'space-between',
-            backgroundColor: 'rgba(0,0,0,0.7)',
+            backgroundColor: '#00695c',
             marginVertical: 10,
             borderRadius: 25,
         },
         userInfo: {
             flexDirection: 'row',
-            justifyContent: 'space-evenly',
+            justifyContent: 'space-around',
             alignItems: 'center',
             height: '80%',
             width: '100%',
             padding: 10,
+            borderTopWidth: 1,
+            borderColor: 'white',
             borderBottomStartRadius: 25,
             borderBottomEndRadius: 25,
-            backgroundColor: '#000'
+            backgroundColor: 'rgba(0,0,0,0.7)'
         },
         userImage: {
-            height: '70%',
-            width: '30%',
+            height: '60%',
+            width: '35%',
             borderRadius: 50,
         },
         btnBack: {
@@ -123,11 +127,19 @@ const City = ({ route }) => {
 
     useEffect(() => {
         dispatch(cityActions.getCityById(cityID));
-        dispatch(itineraryActions.getItinerariesByCity(cityID));
         // eslint-disable-next-line
     }, []);
+    useEffect(() => {
+        dispatch(itineraryActions.getItinerariesByCity(cityID));
+        // eslint-disable-next-line
+    }, [change]);
     let city = useSelector(store => store.cityReducer.city);
     let itineraries = useSelector(store => store.itineraryReducer.itineraries);
+
+    async function handleLike(itineraryID) {
+        await dispatch(itineraryActions.like(itineraryID));
+        setChange(!change);
+    }
 
     return (
         <ImageBackground style={styles.itinerariesSection} source={bgCity} resizeMethod='auto' resizeMode="cover" >
@@ -149,7 +161,7 @@ const City = ({ route }) => {
                         {itineraries?.map((itinerary, i) => {
                             return (
                                 <View style={styles.itinerary} key={i} >
-                                    <View style={{ height: '20%', justifyContent: 'center', paddingHorizontal: 40 }} >
+                                    <View style={{ height: '20%', justifyContent: 'center'}} >
                                         <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 20, textAlign: 'center', marginBottom: 10 }]} >{itinerary.title}</Text>
                                     </View>
                                     <View style={styles.userInfo}>
@@ -159,8 +171,8 @@ const City = ({ route }) => {
                                             <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Duration: {itinerary.duration}hs</Text>
                                             <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Price: ${itinerary.price}</Text>
                                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                                <TouchableOpacity underlayColor="#000" activeOpacity={0.6}>
-                                                    <MaterialCommunityIcons name="cards-heart" size={24} color="white" />
+                                                <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => handleLike(itinerary._id)}>
+                                                    {/* <MaterialCommunityIcons name="cards-heart" size={24} color="white" /> */}
                                                     <MaterialCommunityIcons name="cards-heart-outline" size={24} color="white" />
                                                 </TouchableOpacity>
                                                 <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>{itinerary.likes.length}</Text>

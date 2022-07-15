@@ -42,7 +42,8 @@ const itineraryActions = {
         }
     },
     like: (id) => {
-        const token = localStorage.getItem('Token');
+        // const token = localStorage.getItem('Token');
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYzM0YjIwNjEzY2ViZjQ4NzQwNTg0YyIsImZpcnN0TmFtZSI6IkVzdGViYW4iLCJsYXN0TmFtZSI6IlBpc2FuaSIsInVzZXJQaG90byI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hLS9BT2gxNEdqR3Npa1kxWWJ6b2hYalpHdzJkNndSa0hiY0JSejZ3azljM3dHZHV3PXM5Ni1jIiwiY291bnRyeSI6IkFyZ2VudGluYSIsImlhdCI6MTY1NzQwNzc1MiwiZXhwIjoxNjU4MDEyNTUyfQ.Yh-DrSci86bq4FtBE1SEJTRCRQx99RVM4nKPeepcaXM';
         return async (dispatch, getState) => {
             try {
                 const res = await axios.put(url + '/itineraries/' + id + '/like', {}, {
@@ -72,8 +73,8 @@ const itineraryActions = {
             }
         }
     },
-        updateComment: (id, comment) => {
-        const token = localStorage.getItem('Token');
+    updateComment: (id, comment) => {
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYzM0YjIwNjEzY2ViZjQ4NzQwNTg0YyIsImZpcnN0TmFtZSI6IkVzdGViYW4iLCJsYXN0TmFtZSI6IlBpc2FuaSIsInVzZXJQaG90byI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hLS9BT2gxNEdqR3Npa1kxWWJ6b2hYalpHdzJkNndSa0hiY0JSejZ3azljM3dHZHV3PXM5Ni1jIiwiY291bnRyeSI6IkFyZ2VudGluYSIsImlhdCI6MTY1NzQwNzc1MiwiZXhwIjoxNjU4MDEyNTUyfQ.Yh-DrSci86bq4FtBE1SEJTRCRQx99RVM4nKPeepcaXM';
         return async (dispatch, getState) => {
             try {
                 const res = await axios.put(url + '/itineraries/' + id + '/comment', { comment }, {
@@ -88,13 +89,13 @@ const itineraryActions = {
         }
     },
     deleteComment: (id) => {
-        const token = localStorage.getItem('Token');
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYzM0YjIwNjEzY2ViZjQ4NzQwNTg0YyIsImZpcnN0TmFtZSI6IkVzdGViYW4iLCJsYXN0TmFtZSI6IlBpc2FuaSIsInVzZXJQaG90byI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hLS9BT2gxNEdqR3Npa1kxWWJ6b2hYalpHdzJkNndSa0hiY0JSejZ3azljM3dHZHV3PXM5Ni1jIiwiY291bnRyeSI6IkFyZ2VudGluYSIsImlhdCI6MTY1NzQwNzc1MiwiZXhwIjoxNjU4MDEyNTUyfQ.Yh-DrSci86bq4FtBE1SEJTRCRQx99RVM4nKPeepcaXM';
         // console.log(id)
         return async (dispatch, getState) => {
             try {
                 const res = await axios.delete(url + '/itineraries/' + id + '/comment', {
                     headers: { 'Authorization': 'Bearer ' + token }
-                    });
+                });
                 return res.data.response
             } catch (error) {
                 if (error.response.status === 401) {
