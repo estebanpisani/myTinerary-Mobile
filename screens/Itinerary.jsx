@@ -1,4 +1,4 @@
-import { StyleSheet, View, ImageBackground, useWindowDimensions, ScrollView, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, View, ImageBackground, useWindowDimensions, ScrollView, Image, TextInput, TouchableOpacity } from "react-native";
 import { useState, useEffect } from 'react';
 import { useNavigation } from "@react-navigation/native";
 import { Text } from "@react-native-material/core";
@@ -13,10 +13,13 @@ import itineraryActions from '../redux/actions/itineraryActions';
 
 const Itinerary = ({ route }) => {
     const itineraryID = route.params.id;
+    const cityID = route.params.city;
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const [activities, setActivities] = useState([]);
-    // const [change, setChange] = useState(false);
+    const [change, setChange] = useState(false);
+    const [comment, setComment] = useState('');
+    const user = 'hola';
     const { height, width } = useWindowDimensions();
     const styles = StyleSheet.create({
         fonts: {
@@ -65,18 +68,16 @@ const Itinerary = ({ route }) => {
         activitiesContainer: {
             minHeight: height / 2,
             flexGrow: 1,
-            padding: 20,
-            // paddingBottom: 55
             alignItems: 'center',
             justifyContent: 'space-evenly',
-
+            marginBottom: 7
         },
         activity: {
             borderWidth: 2,
             borderColor: 'white',
             width: '100%',
             minHeight: 230,
-            marginVertical: 10,
+            marginTop: 10,
             justifyContent: 'space-between',
         },
         activityInfo: {
@@ -84,6 +85,43 @@ const Itinerary = ({ route }) => {
             width: '100%',
             textAlign: 'center',
             padding: 5
+        },
+        commentContainer: {
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            alignSelf: 'center',
+            maxHeight: height / 4,
+            width: '85%',
+            padding: 10,
+            backgroundColor: 'rgba(0, 105, 92,0.95)',
+            marginBottom: 15,
+            borderRadius: 10
+
+        },
+        comment: {
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            // height: '30%',
+            width: '100%',
+            padding: 5,
+            backgroundColor: 'rgba(255,255,255, 0.2)',
+            marginBottom: 5,
+            borderRadius: 5,
+        },
+        commentImage: {
+            height: 40,
+            width: 40,
+            borderRadius: 50,
+        },
+        input: {
+            borderWidth: 1,
+            backgroundColor: "white",
+            width: '100%',
+            height: 35,
+            padding: 3,
+            marginTop: 5,
+            borderRadius: 5,
         },
         userInfo: {
             flexDirection: 'row',
@@ -137,7 +175,7 @@ const Itinerary = ({ route }) => {
     useEffect(() => {
         dispatch(itineraryActions.getItineraryById(itineraryID));
         // eslint-disable-next-line
-    }, []);
+    }, [change]);
 
     useEffect(() => {
         const response = async () => {
@@ -149,14 +187,22 @@ const Itinerary = ({ route }) => {
         }
         // eslint-disable-next-line
     }, []);
-
     let itinerary = useSelector(store => store.itineraryReducer.itinerary);
+
+    async function handleSubmitComment(){
+        if (comment !== '') {
+            await dispatch(itineraryActions.addComment(itinerary._id, comment));
+        }
+        setComment('');
+        setChange(!change);
+    }
+
 
     return (
         <ImageBackground style={styles.activitiesSection} source={bgCity} resizeMethod='auto' resizeMode="cover" >
             <ScrollView >
                 {itinerary &&
-                    <View style={{ justifyContent: 'space-between', minHeight: height }}>
+                    <View style={{ justifyContent: 'space-around', minHeight: height }}>
                         <View style={styles.itineraryInfo}>
                             <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 20, textAlign: 'center' }]} >{itinerary.title}</Text>
                             <Text style={[styles.fonts.slogan, styles.text.light, { fontSize: 10, textAlign: 'center' }]} >{itinerary.description}</Text>
@@ -183,9 +229,49 @@ const Itinerary = ({ route }) => {
                                     sliderWidth={width}
                                     itemWidth={width - 70}
                                 /> :
-                                <Text style={{ color: 'white', fontSize: 40, width:width, textAlign: 'center', backgroundColor: 'rgba(0,0,0,0.7)'}}>No available activities</Text>
+                                <Text style={{ color: 'white', fontSize: 40, width: width, textAlign: 'center', backgroundColor: 'rgba(0,0,0,0.7)' }}>No available activities</Text>
                             }
                         </View>
+
+                        <View style={{ backgroundColor: 'black', width: '85%', alignSelf: 'center', borderRadius: 5, marginBottom: 3, height: 30, justifyContent: 'center' }}>
+                            <Text style={{ color: 'white', textAlign: 'center' }} >Leave us a comment!</Text>
+                        </View>
+
+                        {itinerary.comments.length > 0 &&
+                            <View style={styles.commentContainer}>
+                                <ScrollView nestedScrollEnabled >
+                                    {itinerary.comments.map((comment, i) => {
+                                        return (
+                                            <View style={styles.comment}>
+                                                <Image source={{ uri: comment.user.userPhoto }} style={styles.commentImage} resizeMethod='auto' resizeMode='cover' />
+                                                <View style={{ width: '70%', marginStart: 20, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
+                                                    <View style={{ width: '30%', alignItems: 'center' }}>
+                                                        <Text style={{ fontSize: 12, textAlign: 'center', color: 'rgb(2, 51, 46)' }}>{comment.user.firstName}</Text>
+                                                        <Text style={{ fontSize: 12, textAlign: 'center', color: 'rgb(2, 51, 46)' }}>{comment.user.lastName}</Text>
+                                                    </View>
+                                                    <Text style={{ width: '70%', fontSize: 10, textAlign: 'center', color: 'white', flexGrow: 1 }}>{comment.comment}</Text>
+                                                </View>
+                                            </View>
+
+                                        )
+                                    })}
+                                </ScrollView>
+                                {user ?
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={text => setComment(text)}
+                                        placeholder="Tell what you think about this itinerary!"
+                                        keyboardType="default"
+                                        defaultValue={comment}
+                                        onSubmitEditing={handleSubmitComment}
+                                    />
+                                    :
+                                    <TouchableOpacity underlayColor="#000" activeOpacity={0.6} >
+                                        <Text style={{ color: 'white', justifyContent: 'center', textAlign: 'center', textDecorationLine: 'underline' }}>Sign in to comment!</Text>
+                                    </TouchableOpacity>
+                                }
+                            </View>
+                        }
                         <View style={styles.userInfo}>
                             <Image source={{ uri: itinerary.userPhoto }} style={styles.userImage} resizeMethod='auto' resizeMode='cover' />
                             <View style={{ height: '100%', justifyContent: 'space-between' }}>

@@ -57,7 +57,8 @@ const itineraryActions = {
         }
     },
     addComment: (id, comment) => {
-        const token = localStorage.getItem('Token');
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYzM0YjIwNjEzY2ViZjQ4NzQwNTg0YyIsImZpcnN0TmFtZSI6IkVzdGViYW4iLCJsYXN0TmFtZSI6IlBpc2FuaSIsInVzZXJQaG90byI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hLS9BT2gxNEdqR3Npa1kxWWJ6b2hYalpHdzJkNndSa0hiY0JSejZ3azljM3dHZHV3PXM5Ni1jIiwiY291bnRyeSI6IkFyZ2VudGluYSIsImlhdCI6MTY1NzQwNzc1MiwiZXhwIjoxNjU4MDEyNTUyfQ.Yh-DrSci86bq4FtBE1SEJTRCRQx99RVM4nKPeepcaXM';
+        // const token = localStorage.getItem('Token');
         return async (dispatch, getState) => {
             try {
                 const res = await axios.post(url + '/itineraries/' + id + '/comment', { comment }, {

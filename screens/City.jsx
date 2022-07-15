@@ -5,7 +5,7 @@ import { Text } from "@react-native-material/core";
 import bgCity from './../assets/city-body.jpg'
 
 import { useDispatch, useSelector } from 'react-redux';
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import cityActions from '../redux/actions/cityActions';
 import itineraryActions from '../redux/actions/itineraryActions';
 
@@ -63,7 +63,7 @@ const City = ({ route }) => {
         },
         itinerary: {
             width: "100%",
-            height: 300,
+            height: 250,
             alignItems: 'center',
             justifyContent: 'space-between',
             backgroundColor: 'rgba(0,0,0,0.7)',
@@ -74,7 +74,7 @@ const City = ({ route }) => {
             flexDirection: 'row',
             justifyContent: 'space-evenly',
             alignItems: 'center',
-            height: '50%',
+            height: '80%',
             width: '100%',
             padding: 10,
             borderBottomStartRadius: 25,
@@ -112,6 +112,7 @@ const City = ({ route }) => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: 40,
+                marginTop: 10
             },
             text: {
                 textTransform: "uppercase",
@@ -145,29 +146,36 @@ const City = ({ route }) => {
                 }
                 {itineraries.length > 0 ?
                     <View style={styles.itinerariesContainer}>
-                        {itineraries.map((itinerary, i) => {
+                        {itineraries?.map((itinerary, i) => {
                             return (
-                                    <View style={styles.itinerary} key={i} >
-                                        <View style={{ height: '50%', justifyContent: 'center', paddingHorizontal: 40 }} >
-                                            <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 20, textAlign: 'center', marginBottom: 10 }]} >{itinerary.title}</Text>
-                                            <Text style={[styles.fonts.slogan, styles.text.light, { fontSize: 10, textAlign: 'center' }]} >{itinerary.description}</Text>
-                                        </View>
-                                        <View style={styles.userInfo}>
-                                            <Image source={{ uri: itinerary.userPhoto }} style={styles.userImage} resizeMethod='auto' resizeMode='cover' />
-                                            <View style={{ height: '100%', justifyContent: 'space-between' }}>
-                                                <Text style={{ fontSize: 20, textAlign: 'center', color: 'white' }}>{itinerary.userName}</Text>
-                                                <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Duration: {itinerary.duration}hs</Text>
-                                                <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Price: ${itinerary.price}</Text>
-                                                <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => navigation.navigate("Itinerary", { id: itinerary._id })}>
-                                                    <View style={styles.btnMoreInfo.container}>
-                                                        <Text style={styles.btnMoreInfo.text}>
-                                                            More Info
-                                                        </Text>
-                                                    </View>
+                                <View style={styles.itinerary} key={i} >
+                                    <View style={{ height: '20%', justifyContent: 'center', paddingHorizontal: 40 }} >
+                                        <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 20, textAlign: 'center', marginBottom: 10 }]} >{itinerary.title}</Text>
+                                    </View>
+                                    <View style={styles.userInfo}>
+                                        <Image source={{ uri: itinerary.userPhoto }} style={styles.userImage} resizeMethod='auto' resizeMode='cover' />
+                                        <View style={{ height: '100%', justifyContent: 'space-between' }}>
+                                            <Text style={{ fontSize: 20, textAlign: 'center', color: 'white' }}>{itinerary.userName}</Text>
+                                            <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Duration: {itinerary.duration}hs</Text>
+                                            <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Price: ${itinerary.price}</Text>
+                                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                                <TouchableOpacity underlayColor="#000" activeOpacity={0.6}>
+                                                    <MaterialCommunityIcons name="cards-heart" size={24} color="white" />
+                                                    <MaterialCommunityIcons name="cards-heart-outline" size={24} color="white" />
                                                 </TouchableOpacity>
+                                                <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>{itinerary.likes.length}</Text>
                                             </View>
+
+                                            <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => navigation.navigate("Itinerary", { id: itinerary._id, city: itinerary.city })}>
+                                                <View style={styles.btnMoreInfo.container}>
+                                                    <Text style={styles.btnMoreInfo.text}>
+                                                        More Info
+                                                    </Text>
+                                                </View>
+                                            </TouchableOpacity>
                                         </View>
                                     </View>
+                                </View>
                             )
                         })}
                     </View>

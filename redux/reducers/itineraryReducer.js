@@ -19,9 +19,11 @@ const itineraryReducer = (state = initialState, action) => {
             };
 
         case 'GET_ITINERARY_BY_ID':
+            // let itinerary = state.itineraries.filter(itinerary=>itinerary._id===action.payload)
             return {
                 ...state,
                 itinerary: action.payload,
+                // itinerary: itinerary[0]
             };
         default:
             return state;
