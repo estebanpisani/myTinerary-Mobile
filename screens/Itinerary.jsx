@@ -1,4 +1,4 @@
-import { StyleSheet, View, ImageBackground, useWindowDimensions, ScrollView, Image, TextInput, TouchableOpacity } from "react-native";
+import { KeyboardAvoidingView, StyleSheet, View, ImageBackground, useWindowDimensions, ScrollView, Image, TextInput, TouchableOpacity } from "react-native";
 import { useState, useEffect } from 'react';
 import { useNavigation } from "@react-navigation/native";
 import { Text } from "@react-native-material/core";
@@ -19,7 +19,7 @@ const Itinerary = ({ route }) => {
     const [activities, setActivities] = useState([]);
     const [change, setChange] = useState(false);
     const [comment, setComment] = useState('');
-    const user = 'hola';
+    const user = null;
     const { height, width } = useWindowDimensions();
     const styles = StyleSheet.create({
         fonts: {
@@ -59,7 +59,7 @@ const Itinerary = ({ route }) => {
         },
         itineraryInfo: {
             width: "100%",
-            height: height / 5,
+            height: height / 4,
             alignItems: 'center',
             justifyContent: 'space-around',
             backgroundColor: 'rgba(0,0,0,0.7)',
@@ -77,7 +77,7 @@ const Itinerary = ({ route }) => {
             borderColor: 'white',
             width: '100%',
             minHeight: 230,
-            marginTop: 10,
+            marginVertical: 40,
             justifyContent: 'space-between',
         },
         activityInfo: {
@@ -90,7 +90,7 @@ const Itinerary = ({ route }) => {
             justifyContent: 'space-around',
             alignItems: 'center',
             alignSelf: 'center',
-            maxHeight: height / 4,
+            maxHeight: height / 2,
             width: '85%',
             padding: 10,
             backgroundColor: 'rgba(0, 105, 92,0.95)',
@@ -114,13 +114,19 @@ const Itinerary = ({ route }) => {
             width: 40,
             borderRadius: 50,
         },
+        inputContainer: {
+            // marginTop: 20,
+            width: '100%',
+            height: 35,
+            justifyContent: 'center',
+            marginTop: 15
+        },
         input: {
             borderWidth: 1,
             backgroundColor: "white",
             width: '100%',
-            height: 35,
+            height: 40,
             padding: 3,
-            marginTop: 5,
             borderRadius: 5,
         },
         userInfo: {
@@ -189,7 +195,7 @@ const Itinerary = ({ route }) => {
     }, []);
     let itinerary = useSelector(store => store.itineraryReducer.itinerary);
 
-    async function handleSubmitComment(){
+    async function handleSubmitComment() {
         if (comment !== '') {
             await dispatch(itineraryActions.addComment(itinerary._id, comment));
         }
@@ -198,92 +204,102 @@ const Itinerary = ({ route }) => {
     }
 
 
+
     return (
         <ImageBackground style={styles.activitiesSection} source={bgCity} resizeMethod='auto' resizeMode="cover" >
-            <ScrollView >
-                {itinerary &&
-                    <View style={{ justifyContent: 'space-around', minHeight: height }}>
-                        <View style={styles.itineraryInfo}>
-                            <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 20, textAlign: 'center' }]} >{itinerary.title}</Text>
-                            <Text style={[styles.fonts.slogan, styles.text.light, { fontSize: 10, textAlign: 'center' }]} >{itinerary.description}</Text>
-                            <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => navigation.navigate("City", { id: itinerary.country })}>
-                                <View style={styles.btnBack.container}>
-                                    <Text style={styles.btnBack.text}>
-                                        Back
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.activitiesContainer}>
-                            {activities.length > 0 ?
-                                <Carousel
-                                    enableMomentum={false}
-                                    inactiveSlideOpacity={0.5}
-                                    data={activities}
-                                    renderItem={({ item }) =>
-                                        <ImageBackground style={styles.activity} source={{ uri: item.picture }} resizeMethod='auto' resizeMode="cover" >
-                                            <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 20 }, styles.activityInfo]} >{item.title}</Text>
-                                            <Text style={[styles.fonts.slogan, styles.text.light, styles.activityInfo, { fontSize: 10 }]} >{item.description}</Text>
-                                        </ImageBackground>
-                                    }
-                                    sliderWidth={width}
-                                    itemWidth={width - 70}
-                                /> :
-                                <Text style={{ color: 'white', fontSize: 40, width: width, textAlign: 'center', backgroundColor: 'rgba(0,0,0,0.7)' }}>No available activities</Text>
-                            }
-                        </View>
-
-                        <View style={{ backgroundColor: 'black', width: '85%', alignSelf: 'center', borderRadius: 5, marginBottom: 3, height: 30, justifyContent: 'center' }}>
-                            <Text style={{ color: 'white', textAlign: 'center' }} >Leave us a comment!</Text>
-                        </View>
-
-                        {itinerary.comments.length > 0 &&
-                            <View style={styles.commentContainer}>
-                                <ScrollView nestedScrollEnabled contentOffset={{x: 0, y: 3000}}  >
-                                    {itinerary.comments.map((comment, i) => {
-                                        return (
-                                            <View style={styles.comment}>
-                                                <Image source={{ uri: comment.user.userPhoto }} style={styles.commentImage} resizeMethod='auto' resizeMode='cover' />
-                                                <View style={{ width: '70%', marginStart: 20, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
-                                                    <View style={{ width: '30%', alignItems: 'center' }}>
-                                                        <Text style={{ fontSize: 12, textAlign: 'center', color: 'rgb(2, 51, 46)' }}>{comment.user.firstName}</Text>
-                                                        <Text style={{ fontSize: 12, textAlign: 'center', color: 'rgb(2, 51, 46)' }}>{comment.user.lastName}</Text>
-                                                    </View>
-                                                    <Text style={{ width: '70%', fontSize: 10, textAlign: 'center', color: 'white', flexGrow: 1 }}>{comment.comment}</Text>
-                                                </View>
-                                            </View>
-
-                                        )
-                                    })}
-                                </ScrollView>
-                                {user ?
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={text => setComment(text)}
-                                        placeholder="Tell what you think about this itinerary!"
-                                        keyboardType="default"
-                                        defaultValue={comment}
-                                        onSubmitEditing={handleSubmitComment}
-                                    />
-                                    :
-                                    <TouchableOpacity underlayColor="#000" activeOpacity={0.6} >
-                                        <Text style={{ color: 'white', justifyContent: 'center', textAlign: 'center', textDecorationLine: 'underline' }}>Sign in to comment!</Text>
-                                    </TouchableOpacity>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "position"}
+                style={{ flex: 1 }}
+            >
+                <ScrollView >
+                    {itinerary &&
+                        <View style={{ justifyContent: 'space-around', minHeight: height }}>
+                            <View style={styles.itineraryInfo}>
+                                <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 20, textAlign: 'center' }]} >{itinerary.title}</Text>
+                                <Text style={[styles.fonts.slogan, styles.text.light, { fontSize: 10, textAlign: 'center' }]} >{itinerary.description}</Text>
+                                <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => navigation.navigate("City", { id: itinerary.country })}>
+                                    <View style={styles.btnBack.container}>
+                                        <Text style={styles.btnBack.text}>
+                                            Back
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.activitiesContainer}>
+                                {activities.length > 0 ?
+                                    <Carousel
+                                        enableMomentum={false}
+                                        inactiveSlideOpacity={0.5}
+                                        data={activities}
+                                        renderItem={({ item }) =>
+                                            <ImageBackground style={styles.activity} source={{ uri: item.picture }} resizeMethod='auto' resizeMode="cover" >
+                                                <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 20 }, styles.activityInfo]} >{item.title}</Text>
+                                                <Text style={[styles.fonts.slogan, styles.text.light, styles.activityInfo, { fontSize: 10 }]} >{item.description}</Text>
+                                            </ImageBackground>
+                                        }
+                                        sliderWidth={width}
+                                        itemWidth={width - 70}
+                                    /> :
+                                    <Text style={{ color: 'white', fontSize: 40, width: width, textAlign: 'center', backgroundColor: 'rgba(0,0,0,0.7)' }}>No available activities</Text>
                                 }
                             </View>
-                        }
-                        <View style={styles.userInfo}>
-                            <Image source={{ uri: itinerary.userPhoto }} style={styles.userImage} resizeMethod='auto' resizeMode='cover' />
-                            <View style={{ height: '100%', justifyContent: 'space-between' }}>
-                                <Text style={{ fontSize: 20, textAlign: 'center', color: 'white' }}>{itinerary.userName}</Text>
-                                <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Duration: {itinerary.duration}hs</Text>
-                                <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Price: ${itinerary.price}</Text>
+                            <View style={{ backgroundColor: 'black', width: '85%', alignSelf: 'center', borderRadius: 5, marginBottom: 3, height: 30, justifyContent: 'center' }}>
+                                <Text style={{ color: 'white', textAlign: 'center' }} >Leave us a comment!</Text>
+                            </View>
+
+                            {itinerary.comments.length > 0 &&
+                                <View style={styles.commentContainer}>
+                                    <ScrollView nestedScrollEnabled contentOffset={{ x: 0, y: 3000 }}  >
+                                        {itinerary.comments.map((comment, i) => {
+                                            return (
+                                                <View style={styles.comment}>
+                                                    <Image source={{ uri: comment.user.userPhoto }} style={styles.commentImage} resizeMethod='auto' resizeMode='cover' />
+                                                    <View style={{ width: '70%', marginStart: 20, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
+                                                        <View style={{ width: '30%', alignItems: 'center' }}>
+                                                            <Text style={{ fontSize: 12, textAlign: 'center', color: 'rgb(2, 51, 46)' }}>{comment.user.firstName}</Text>
+                                                            <Text style={{ fontSize: 12, textAlign: 'center', color: 'rgb(2, 51, 46)' }}>{comment.user.lastName}</Text>
+                                                        </View>
+                                                        <Text style={{ width: '70%', fontSize: 10, textAlign: 'center', color: 'white', flexGrow: 1 }}>{comment.comment}</Text>
+                                                    </View>
+                                                </View>
+
+                                            )
+                                        })}
+                                    </ScrollView>
+
+                                    <View style={styles.inputContainer}>
+                                        {user ?
+                                            <TextInput
+                                                style={styles.input}
+                                                onChangeText={text => setComment(text)}
+                                                textAlign='center'
+                                                // onFocus={()=>setShow(false)}
+                                                placeholder="Tell us what you think about this itinerary!"
+                                                keyboardType="default"
+                                                defaultValue={comment}
+                                                onSubmitEditing={handleSubmitComment}
+                                            />
+                                            :
+                                            <TouchableOpacity underlayColor="#000" activeOpacity={0.6} >
+                                                <Text style={{ color: 'white', justifyContent: 'center', textAlign: 'center', textDecorationLine: 'underline', fontSize:20 }}>Sign in to comment!</Text>
+                                            </TouchableOpacity>
+                                        }
+                                    </View>
+                                </View>
+                            }
+                            <View style={styles.userInfo}>
+                                <Image source={{ uri: itinerary.userPhoto }} style={styles.userImage} resizeMethod='auto' resizeMode='cover' />
+                                <View style={{ height: '100%', justifyContent: 'space-between' }}>
+                                    <Text style={{ fontSize: 20, textAlign: 'center', color: 'white' }}>{itinerary.userName}</Text>
+                                    <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Duration: {itinerary.duration}hs</Text>
+                                    <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Price: ${itinerary.price}</Text>
+                                </View>
                             </View>
                         </View>
-                    </View>
-                }
-            </ScrollView>
-        </ImageBackground>
+                    }
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </ImageBackground >
     );
 }
 
