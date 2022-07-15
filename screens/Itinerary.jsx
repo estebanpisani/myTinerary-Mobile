@@ -239,7 +239,7 @@ const Itinerary = ({ route }) => {
 
                         {itinerary.comments.length > 0 &&
                             <View style={styles.commentContainer}>
-                                <ScrollView nestedScrollEnabled >
+                                <ScrollView nestedScrollEnabled contentOffset={{x: 0, y: 3000}}  >
                                     {itinerary.comments.map((comment, i) => {
                                         return (
                                             <View style={styles.comment}>
