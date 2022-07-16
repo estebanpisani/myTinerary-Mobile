@@ -1,5 +1,4 @@
 import { StatusBar } from 'react-native';
-import { useWindowDimensions } from 'react-native';
 import { LogBox } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Tabs from './navigation/Tabs';
@@ -10,7 +9,6 @@ import mainReducer from './redux/reducers/mainReducer'
 export default function App() {
 
   const store = configureStore({ reducer: mainReducer });
-  const { height, width } = useWindowDimensions();
   LogBox.ignoreAllLogs();
   return (
     <Provider store={store}>

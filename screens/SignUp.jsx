@@ -2,12 +2,13 @@ import { Form, FormItem, Picker } from 'react-native-form-component';
 import { StyleSheet, View, ImageBackground, useWindowDimensions, ScrollView, Image, TouchableOpacity, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from 'react';
-import jwt_decode from 'jwt-decode';
-
 import { useSelector, useDispatch } from 'react-redux';
 import userActions from '../redux/actions/userActions';
 import dataActions from '../redux/actions/dataActions';
 import bgCity from './../assets/city-body.jpg'
+import AppLoading from 'expo-app-loading';
+import { Comfortaa_500Medium } from '@expo-google-fonts/comfortaa';
+import { useFonts, Charm_400Regular } from '@expo-google-fonts/charm';
 
 const SignUp = () => {
     const [email, setEmail] = useState('');
@@ -19,15 +20,18 @@ const SignUp = () => {
     const [password2, setPassword2] = useState('');
     const navigation = useNavigation();
     const dispatch = useDispatch();
-
+    let [fontsLoaded] = useFonts({
+        Charm_400Regular,
+        Comfortaa_500Medium
+    })
     let errors = useSelector(store => store.userReducer.errors);
     let message = useSelector(store => store.userReducer.message);
 
     const styles = StyleSheet.create({
         fonts: {
             title: { fontSize: 50 },
-            slogan: { fontSize: 30 },
-            normal: { fontSize: 15 }
+            slogan: { fontSize: 30, fontFamily: 'Charm_400Regular' },
+            normal: { fontSize: 15, fontFamily: 'Comfortaa_500Medium' }
         },
         text: {
             primary: { color: "#00695c" },
@@ -150,17 +154,19 @@ const SignUp = () => {
             navigation.navigate("Login");
         }, 1000);
     }
-
+    if (!fontsLoaded) {
+        return <AppLoading />;
+    }
     return (
-            <ScrollView>
-        <ImageBackground style={styles.authContainer} source={bgCity} resizeMethod='auto' resizeMode="cover" >
+        <ScrollView>
+            <ImageBackground style={styles.authContainer} source={bgCity} resizeMethod='auto' resizeMode="cover" >
                 <Form
                     onButtonPress={() => handleSubmit()}
                     buttonText='SIGN UP'
                     buttonStyle={{ backgroundColor: '#00695c' }}
                     style={styles.formContainer}
                 >
-                    <Text style={[styles.text.primary, { textAlign: 'center', fontSize: 25, marginBottom: 30 }]}>Sign Up</Text>
+                    <Text style={[styles.text.primary, styles.fonts.slogan, { textAlign: 'center', marginBottom: 10 }]}>Sign Up</Text>
 
                     <FormItem
                         label="First Name"
@@ -238,15 +244,15 @@ const SignUp = () => {
                         secureTextEntry
                     />
                     <View>
-                        <Text style={{ textAlign: 'center', fontSize: 15, marginTop: 30 }}>Already registered?</Text>
+                        <Text style={{ textAlign: 'center', fontSize: 15 }}>Already registered?</Text>
                         <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => navigation.navigate("Login")}>
-                            <Text style={[styles.text.primary, { textAlign: 'center', fontSize: 20, marginTop: 15 }]}>Sign In!</Text>
+                            <Text style={[styles.text.primary, styles.fonts.slogan, { textAlign: 'center', fontSize: 30, textDecorationLine:'underline' }]}>Sign In!</Text>
                         </TouchableOpacity>
                     </View>
 
                 </Form>
-        </ImageBackground>
-            </ScrollView>
+            </ImageBackground>
+        </ScrollView>
     )
 }
 export default SignUp;

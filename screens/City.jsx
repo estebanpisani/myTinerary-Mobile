@@ -2,12 +2,15 @@ import { StyleSheet, View, ImageBackground, useWindowDimensions, ScrollView, Ima
 import { useState, useEffect } from 'react';
 import { useNavigation } from "@react-navigation/native";
 import { Text } from "@react-native-material/core";
-import bgCity from './../assets/city-body.jpg'
-
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import cityActions from '../redux/actions/cityActions';
 import itineraryActions from '../redux/actions/itineraryActions';
+import AppLoading from 'expo-app-loading';
+import { useFonts, Comfortaa_500Medium } from '@expo-google-fonts/comfortaa';
+import { Cookie_400Regular } from '@expo-google-fonts/cookie';
+import { Charm_400Regular } from '@expo-google-fonts/charm';
+import bgCity from './../assets/city-body.jpg'
 
 const City = ({ route }) => {
     // const cityID = route.params.id;
@@ -19,12 +22,16 @@ const City = ({ route }) => {
     const city = useSelector(store => store.cityReducer.city);
     const itineraries = useSelector(store => store.itineraryReducer.itineraries);
     const user = useSelector(store => store.userReducer.userData);
-
+    let [fontsLoaded] = useFonts({
+        Comfortaa_500Medium,
+        Charm_400Regular,
+        Cookie_400Regular
+    })
     const styles = StyleSheet.create({
         fonts: {
-            title: { fontSize: 50 },
-            slogan: { fontSize: 30 },
-            normal: { fontSize: 15 }
+            title: { fontSize: 50, fontFamily: 'Cookie_400Regular' },
+            slogan: { fontSize: 30, fontFamily: 'Charm_400Regular' },
+            normal: { fontSize: 15, fontFamily: 'Comfortaa_500Medium' }
         },
         text: {
             primary: { color: "#00695c" },
@@ -143,7 +150,9 @@ const City = ({ route }) => {
         await dispatch(itineraryActions.like(itineraryID));
         setChange(!change);
     }
-
+    if (!fontsLoaded) {
+        return <AppLoading />;
+    }
     return (
         <ImageBackground style={styles.itinerariesSection} source={bgCity} resizeMethod='auto' resizeMode="cover" >
             <ScrollView >

@@ -1,12 +1,13 @@
 import { Form, FormItem } from 'react-native-form-component';
 import { StyleSheet, View, ImageBackground, useWindowDimensions, ScrollView, Image, TouchableOpacity, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useState, useEffect } from 'react';
-import jwt_decode from 'jwt-decode';
-
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import userActions from '../redux/actions/userActions';
 import bgCity from './../assets/city-body.jpg'
+import AppLoading from 'expo-app-loading';
+import { Comfortaa_500Medium } from '@expo-google-fonts/comfortaa';
+import { useFonts, Charm_400Regular } from '@expo-google-fonts/charm';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -14,12 +15,15 @@ const Login = () => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     let message = useSelector(store => store.userReducer.message);
-
+    let [fontsLoaded] = useFonts({
+        Charm_400Regular,
+        Comfortaa_500Medium
+    })
     const styles = StyleSheet.create({
         fonts: {
             title: { fontSize: 50 },
-            slogan: { fontSize: 30 },
-            normal: { fontSize: 15 }
+            slogan: { fontSize: 30, fontFamily: 'Charm_400Regular' },
+            normal: { fontSize: 15, fontFamily: 'Comfortaa_500Medium' }
         },
         text: {
             primary: { color: "#00695c" },
@@ -120,7 +124,9 @@ const Login = () => {
             navigation.navigate("Home");
         }, 1000);
     }
-
+    if (!fontsLoaded) {
+        return <AppLoading />;
+    }
     return (
         <ImageBackground style={styles.authContainer} source={bgCity} resizeMethod='auto' resizeMode="cover" >
             <Form
@@ -129,7 +135,7 @@ const Login = () => {
                 buttonStyle={{ backgroundColor: '#00695c' }}
                 style={styles.formContainer}
             >
-                <Text style={[styles.text.primary, { textAlign: 'center', fontSize: 25, marginBottom: 30 }]}>Sign In</Text>
+                <Text style={[styles.text.primary, styles.fonts.slogan, { textAlign: 'center', fontSize: 30 }]}>Sign In</Text>
                 <FormItem
                     label="Email"
                     isRequired
@@ -154,7 +160,7 @@ const Login = () => {
                 <View>
                     <Text style={{ textAlign: 'center', fontSize: 15, marginTop: 30 }}>Don't have an account?</Text>
                     <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => navigation.navigate("SignUp")}>
-                        <Text style={[styles.text.primary, { textAlign: 'center', fontSize: 20, marginTop: 15 }]}>Sign Up!</Text>
+                        <Text style={[styles.text.primary, styles.fonts.slogan, { textAlign: 'center', fontSize: 30, textDecorationLine:'underline' }]}>Sign Up!</Text>
                     </TouchableOpacity>
                 </View>
 

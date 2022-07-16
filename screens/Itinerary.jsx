@@ -2,11 +2,15 @@ import { KeyboardAvoidingView, StyleSheet, View, ImageBackground, useWindowDimen
 import { useState, useEffect } from 'react';
 import { useNavigation } from "@react-navigation/native";
 import { Text } from "@react-native-material/core";
+import { useDispatch, useSelector } from 'react-redux';
 
 import bgCity from './../assets/city-body.jpg'
 import Carousel from 'react-native-snap-carousel';
 
-import { useDispatch, useSelector } from 'react-redux';
+import AppLoading from 'expo-app-loading';
+import { useFonts, Comfortaa_500Medium } from '@expo-google-fonts/comfortaa';
+import { Cookie_400Regular } from '@expo-google-fonts/cookie';
+import { Charm_400Regular } from '@expo-google-fonts/charm';
 
 import activityActions from '../redux/actions/activityActions';
 import itineraryActions from '../redux/actions/itineraryActions';
@@ -24,11 +28,17 @@ const Itinerary = ({ route }) => {
     const user = useSelector(store => store.userReducer.userData);
     const { height, width } = useWindowDimensions();
 
+    let [fontsLoaded] = useFonts({
+        Comfortaa_500Medium,
+        Charm_400Regular,
+        Cookie_400Regular
+    })
+
     const styles = StyleSheet.create({
         fonts: {
-            title: { fontSize: 50 },
-            slogan: { fontSize: 30 },
-            normal: { fontSize: 15 }
+            title: { fontSize: 50, fontFamily: 'Cookie_400Regular' },
+            slogan: { fontSize: 30, fontFamily: 'Charm_400Regular' },
+            normal: { fontSize: 15, fontFamily: 'Comfortaa_500Medium' }
         },
         text: {
             primary: { color: "#00695c" },
@@ -249,7 +259,9 @@ const Itinerary = ({ route }) => {
         await dispatch(itineraryActions.deleteComment(commentID))
         setChange(!change);
     }
-
+    if (!fontsLoaded) {
+        return <AppLoading />;
+    }
     return (
         <ImageBackground style={styles.activitiesSection} source={bgCity} resizeMethod='auto' resizeMode="cover" >
             <KeyboardAvoidingView
@@ -261,7 +273,7 @@ const Itinerary = ({ route }) => {
                         <View style={{ justifyContent: 'space-around', minHeight: height }}>
                             <View style={styles.itineraryInfo}>
                                 <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 20, textAlign: 'center' }]} >{itinerary.title}</Text>
-                                <Text style={[styles.fonts.slogan, styles.text.light, { fontSize: 10, textAlign: 'center' }]} >{itinerary.description}</Text>
+                                <Text style={[styles.fonts.normal, styles.text.light, { fontSize: 10, textAlign: 'center' }]} >{itinerary.description}</Text>
                                 <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => navigation.navigate("City", { id: itinerary.country })}>
                                     <View style={styles.btnBack.container}>
                                         <Text style={styles.btnBack.text}>
@@ -279,7 +291,7 @@ const Itinerary = ({ route }) => {
                                         renderItem={({ item }) =>
                                             <ImageBackground style={styles.activity} source={{ uri: item.picture }} resizeMethod='auto' resizeMode="cover" >
                                                 <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 20 }, styles.activityInfo]} >{item.title}</Text>
-                                                <Text style={[styles.fonts.slogan, styles.text.light, styles.activityInfo, { fontSize: 10 }]} >{item.description}</Text>
+                                                <Text style={[styles.fonts.snormal, styles.text.light, styles.activityInfo, { fontSize: 10 }]} >{item.description}</Text>
                                             </ImageBackground>
                                         }
                                         sliderWidth={width}

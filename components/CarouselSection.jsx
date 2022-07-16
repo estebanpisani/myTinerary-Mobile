@@ -1,21 +1,30 @@
 import { StyleSheet, useWindowDimensions, ImageBackground, View, Text, TouchableOpacity, Image, FlatList } from 'react-native';
 import carouselBg from './../assets/home-carrousel.jpg'
 import { useDispatch, useSelector } from 'react-redux';
-import { useState, useEffect } from 'react';
-
+import { useEffect } from 'react';
+import AppLoading from 'expo-app-loading';
+import { useFonts, Comfortaa_500Medium } from '@expo-google-fonts/comfortaa';
+import { Cookie_400Regular } from '@expo-google-fonts/cookie';
+import { Charm_400Regular} from '@expo-google-fonts/charm';
 import Carousel from 'react-native-snap-carousel';
-
 import cityActions from './../redux/actions/cityActions';
 
 const CarouselSection = () => {
     const { height, width } = useWindowDimensions();
     const dispatch = useDispatch();
 
+    let [fontsLoaded] = useFonts({
+        Comfortaa_500Medium,
+        Charm_400Regular,
+        Cookie_400Regular
+    })
+
+
     const styles = StyleSheet.create({
         fonts: {
-            title: { fontSize: 50 },
-            slogan: { fontSize: 30 },
-            normal: { fontSize: 15 }
+            title: { fontSize: 50, fontFamily: 'Cookie_400Regular' },
+            slogan: { fontSize: 30, fontFamily: 'Charm_400Regular' },
+            normal: { fontSize: 15, fontFamily: 'Comfortaa_500Medium' }
         },
         text: {
             primary: { color: "#00695c" },
@@ -49,7 +58,7 @@ const CarouselSection = () => {
             width: width,
             flex: 1,
             height: height,
-            padding:20
+            padding: 20
         },
         carouselContainer: {
             display: 'flex',
@@ -76,9 +85,12 @@ const CarouselSection = () => {
 
     const cities = useSelector(store => store.cityReducer.cities).slice(0, 11);
 
+    if (!fontsLoaded) {
+        return <AppLoading />;
+    }
     return (
         <ImageBackground style={styles.carouselSection} source={carouselBg} resizeMethod='auto' resizeMode="cover" >
-            <Text style={[styles.fonts.title, styles.text.light, styles.text.shadowBlurPrimary, styles.text.center]} >Popular MyTineraries!</Text>
+            <Text style={[styles.fonts.title, styles.text.primary, styles.text.shadowBlurLight, styles.text.center]} >Popular MyTineraries!</Text>
             {cities.length > 0 &&
                 <View style={styles.carouselContainer}>
                     <Carousel
@@ -91,15 +103,15 @@ const CarouselSection = () => {
                         inactiveSlideOpacity={0.3}
                         data={cities}
                         renderItem={({ item, index }) =>
-                            <ImageBackground key={index}  source={{ uri: item.image }}>
+                            <ImageBackground key={index} source={{ uri: item.image }}>
                                 <View style={styles.carouselItem} >
-                                    <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, styles.text.center, {fontSize:40}]} >{item.name}</Text>
-                                    <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, styles.text.center,{fontSize:30}]}>{item.country}</Text>
+                                    <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, styles.text.center, { fontSize: 40 }]} >{item.name}</Text>
+                                    <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, styles.text.center, { fontSize: 30 }]}>{item.country}</Text>
                                 </View>
                             </ImageBackground>
                         }
                         sliderWidth={width}
-                        itemWidth={width-70}
+                        itemWidth={width - 70}
                     />
                 </View>
             }

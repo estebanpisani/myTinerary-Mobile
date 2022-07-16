@@ -3,7 +3,10 @@ import { Text } from "@react-native-material/core";
 import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from 'react';
 import bgCities from './../assets/cities-cards.jpg'
-
+import AppLoading from 'expo-app-loading';
+import { useFonts, Comfortaa_500Medium } from '@expo-google-fonts/comfortaa';
+import { Cookie_400Regular } from '@expo-google-fonts/cookie';
+import { Charm_400Regular } from '@expo-google-fonts/charm';
 import { useDispatch, useSelector } from 'react-redux';
 import cityActions from '../redux/actions/cityActions';
 
@@ -12,11 +15,16 @@ const Cities = () => {
     const { height, width } = useWindowDimensions();
     const navigation = useNavigation();
     const [search, setSearch] = useState('');
+    let [fontsLoaded] = useFonts({
+        Comfortaa_500Medium,
+        Charm_400Regular,
+        Cookie_400Regular
+    })
     const styles = StyleSheet.create({
         fonts: {
-            title: { fontSize: 50 },
-            slogan: { fontSize: 30 },
-            normal: { fontSize: 15 }
+            title: { fontSize: 50, fontFamily: 'Cookie_400Regular' },
+            slogan: { fontSize: 30, fontFamily: 'Charm_400Regular' },
+            normal: { fontSize: 15, fontFamily: 'Comfortaa_500Medium' }
         },
         text: {
             primary: { color: "#00695c" },
@@ -93,7 +101,10 @@ const Cities = () => {
     }, [search]);
     let cities = useSelector(store => store.cityReducer.cities);
     let results = useSelector(store => store.cityReducer.filteredCities);
-
+    
+    if (!fontsLoaded) {
+        return <AppLoading />;
+    }
     return (
         <ImageBackground style={styles.CitiesSection} source={bgCities} resizeMethod='auto' resizeMode="cover" >
             <View style={styles.filterContainer}>
@@ -107,22 +118,22 @@ const Cities = () => {
             </View>
             <ScrollView >
                 {cities.length > 0 ?
-                    <View style={styles.citiesContainer}>                 
+                    <View style={styles.citiesContainer}>
                         {results.map((item, i) => {
                             return (
-                        <TouchableOpacity key={i} underlayColor="#000" activeOpacity={0.6} onPress={() => navigation.navigate("City", {id: item._id})} >
-                            <ImageBackground source={{ uri: item.image }} style={styles.cityContainer}>
-                                <View style={styles.city} >
-                                    <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { textAlign: 'center', fontSize: 40 }]} >{item.name}</Text>
-                                    <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { textAlign: 'center', fontSize: 30 }]}>{item.country}</Text>
-                                </View>
-                            </ImageBackground>
-                        </TouchableOpacity>
-                        )
+                                <TouchableOpacity key={i} underlayColor="#000" activeOpacity={0.6} onPress={() => navigation.navigate("City", { id: item._id })} >
+                                    <ImageBackground source={{ uri: item.image }} style={styles.cityContainer}>
+                                        <View style={styles.city} >
+                                            <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { textAlign: 'center', fontSize: 40 }]} >{item.name}</Text>
+                                            <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { textAlign: 'center', fontSize: 30 }]}>{item.country}</Text>
+                                        </View>
+                                    </ImageBackground>
+                                </TouchableOpacity>
+                            )
                         })}
                     </View>
                     :
-                    <View style={{ backgroundColor: 'rgba(0,0,0,0.5)', height: height*7/8, width: width, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ backgroundColor: 'rgba(0,0,0,0.5)', height: height * 7 / 8, width: width, justifyContent: 'center', alignItems: 'center' }}>
                         <ActivityIndicator size="large" color="white" />
                         <Text style={{ color: 'white', fontSize: 40 }}>Loading Cities...</Text>
                     </View>

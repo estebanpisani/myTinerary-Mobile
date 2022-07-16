@@ -21,6 +21,9 @@ export default function AuthStack() {
             <AuthNavigator.Screen
                 name='SignUp'
                 component={SignUp}
+                options={{
+                    headerShown: false
+                }}
             />
             <AuthNavigator.Screen
                 name='Profile'
