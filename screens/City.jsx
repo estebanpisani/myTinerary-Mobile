@@ -10,11 +10,15 @@ import cityActions from '../redux/actions/cityActions';
 import itineraryActions from '../redux/actions/itineraryActions';
 
 const City = ({ route }) => {
-    const cityID = route.params.id;
+    // const cityID = route.params.id;
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const { height, width } = useWindowDimensions();
     const [change, setChange] = useState(false);
+    const [cityID, setCityID] = useState(route.params.id);
+    const city = useSelector(store => store.cityReducer.city);
+    const itineraries = useSelector(store => store.itineraryReducer.itineraries);
+    const user = useSelector(store => store.userReducer.userData);
 
     const styles = StyleSheet.create({
         fonts: {
@@ -133,8 +137,7 @@ const City = ({ route }) => {
         dispatch(itineraryActions.getItinerariesByCity(cityID));
         // eslint-disable-next-line
     }, [change]);
-    let city = useSelector(store => store.cityReducer.city);
-    let itineraries = useSelector(store => store.itineraryReducer.itineraries);
+
 
     async function handleLike(itineraryID) {
         await dispatch(itineraryActions.like(itineraryID));
@@ -161,7 +164,7 @@ const City = ({ route }) => {
                         {itineraries?.map((itinerary, i) => {
                             return (
                                 <View style={styles.itinerary} key={i} >
-                                    <View style={{ height: '20%', justifyContent: 'center'}} >
+                                    <View style={{ height: '20%', justifyContent: 'center' }} >
                                         <Text style={[styles.fonts.slogan, styles.text.light, styles.text.shadowBlurPrimary, { fontSize: 20, textAlign: 'center', marginBottom: 10 }]} >{itinerary.title}</Text>
                                     </View>
                                     <View style={styles.userInfo}>
@@ -171,10 +174,21 @@ const City = ({ route }) => {
                                             <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Duration: {itinerary.duration}hs</Text>
                                             <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>Price: ${itinerary.price}</Text>
                                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                                <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => handleLike(itinerary._id)}>
-                                                    {/* <MaterialCommunityIcons name="cards-heart" size={24} color="white" /> */}
-                                                    <MaterialCommunityIcons name="cards-heart-outline" size={24} color="white" />
-                                                </TouchableOpacity>
+
+                                                {user ?
+                                                
+                                                    <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => handleLike(itinerary._id)}>
+                                                        {itinerary.likes.includes(user.id) ?
+                                                            <MaterialCommunityIcons name="cards-heart" size={24} color="white" />
+                                                            :
+                                                            < MaterialCommunityIcons name="cards-heart-outline" size={24} color="white" />
+                                                        }
+                                                    </TouchableOpacity>
+                                                    :
+                                                    <TouchableOpacity underlayColor="#000" activeOpacity={0.6}>
+                                                        < MaterialCommunityIcons name="cards-heart-outline" size={24} color="white" />
+                                                    </TouchableOpacity>
+                                                }
                                                 <Text style={{ fontSize: 15, textAlign: 'center', color: 'white' }}>{itinerary.likes.length}</Text>
                                             </View>
 

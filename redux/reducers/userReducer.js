@@ -1,5 +1,4 @@
 const initialState = {
-    users: [],
     userData: null,
     errors: [],
     message: ''

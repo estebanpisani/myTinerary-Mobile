@@ -188,6 +188,7 @@ const SignUp = () => {
                         <Picker
                             items={countryList}
                             label="Country"
+                            asterik
                             isRequired
                             selectedValue={country}
                             placeholder='------ Select your country ------'
@@ -227,7 +228,7 @@ const SignUp = () => {
                         secureTextEntry
                     />
                     <FormItem
-                        label="Password2"
+                        label="Repeat your password"
                         isRequired
                         value={password2}
                         onChangeText={(pass) => setPassword2(pass)}

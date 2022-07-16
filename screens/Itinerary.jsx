@@ -20,8 +20,10 @@ const Itinerary = ({ route }) => {
     const [commentValue, setCommentValue] = useState('');
     const [editID, setEditID] = useState('');
     const [edit, setEdit] = useState(false);
-    const user = 'null';
+    let itinerary = useSelector(store => store.itineraryReducer.itinerary);
+    const user = useSelector(store => store.userReducer.userData);
     const { height, width } = useWindowDimensions();
+
     const styles = StyleSheet.create({
         fonts: {
             title: { fontSize: 50 },
@@ -212,7 +214,6 @@ const Itinerary = ({ route }) => {
         }
         // eslint-disable-next-line
     }, []);
-    let itinerary = useSelector(store => store.itineraryReducer.itinerary);
 
     async function handleSubmitComment() {
         if (commentValue !== '') {
@@ -239,8 +240,8 @@ const Itinerary = ({ route }) => {
         if (commentValue !== '') {
             await dispatch(itineraryActions.updateComment(editID, commentValue));
         }
-        setEditID('');
         setCommentValue('');
+        setEditID('');
         setChange(!change);
     }
 
@@ -248,7 +249,6 @@ const Itinerary = ({ route }) => {
         await dispatch(itineraryActions.deleteComment(commentID))
         setChange(!change);
     }
-
 
     return (
         <ImageBackground style={styles.activitiesSection} source={bgCity} resizeMethod='auto' resizeMode="cover" >
@@ -325,22 +325,23 @@ const Itinerary = ({ route }) => {
                                                             }
                                                         </View>
                                                     </View>
-                                                    <View style={styles.commentOptions}>
-                                                        {edit && editID === comment._id ?
-                                                            <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => closeEdit()}>
-                                                                <Text style={{ fontSize: 12, textAlign: 'center', color: 'rgb(2, 51, 46)', marginHorizontal: 10 }}>CLOSE</Text>
+                                                    {user?.id === comment.user._id &&
+                                                        <View style={styles.commentOptions}>
+                                                            {edit && editID === comment._id ?
+                                                                <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => closeEdit()}>
+                                                                    <Text style={{ fontSize: 12, textAlign: 'center', color: 'white', marginHorizontal: 10 }}>CLOSE</Text>
+                                                                </TouchableOpacity>
+                                                                :
+                                                                <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => handleEdit(comment._id, comment.comment)}>
+                                                                    <Text style={{ fontSize: 12, textAlign: 'center', color: 'white', marginHorizontal: 10 }}>EDIT</Text>
+                                                                </TouchableOpacity>
+                                                            }
+                                                            <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => handleDelete(comment._id)}>
+                                                                <Text style={{ fontSize: 12, textAlign: 'center', color: 'white', marginHorizontal: 10 }}>DELETE</Text>
                                                             </TouchableOpacity>
-                                                            :
-                                                            <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => handleEdit(comment._id, comment.comment)}>
-                                                                <Text style={{ fontSize: 12, textAlign: 'center', color: 'rgb(2, 51, 46)', marginHorizontal: 10 }}>EDIT</Text>
-                                                            </TouchableOpacity>
-                                                        }
-                                                        <TouchableOpacity underlayColor="#000" activeOpacity={0.6} onPress={() => handleDelete(comment._id)}>
-                                                            <Text style={{ fontSize: 12, textAlign: 'center', color: 'rgb(2, 51, 46)', marginHorizontal: 10 }}>DELETE</Text>
-                                                        </TouchableOpacity>
-                                                    </View>
+                                                        </View>
+                                                    }
                                                 </View>
-
                                             )
                                         })}
                                     </ScrollView>
@@ -359,10 +360,7 @@ const Itinerary = ({ route }) => {
                                         }
                                         {
                                             (user === null && edit === false) &&
-                                            <TouchableOpacity underlayColor="#000" activeOpacity={0.6} >
-                                                <Text style={{ color: 'white', justifyContent: 'center', textAlign: 'center', textDecorationLine: 'underline', fontSize: 20 }}>Sign in to comment!</Text>
-                                            </TouchableOpacity>
-
+                                            <Text style={{ color: 'white', justifyContent: 'center', textAlign: 'center', fontSize: 20 }}>Sign in to comment!</Text>
                                         }
                                     </View>
                                 </View>

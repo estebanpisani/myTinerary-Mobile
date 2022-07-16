@@ -1,6 +1,8 @@
 import axios from "axios";
 import url from '../../url'
 
+import { AsyncStorage } from 'react-native';
+
 
 const userActions = {
 
@@ -22,7 +24,12 @@ const userActions = {
         return async (dispatch, getState) => {
             try {
                 const res = await axios.post(url + '/auth/login', userCredentials);
-                console.log(res.data)
+                if (res.data.success) {
+                    await AsyncStorage.setItem(
+                        '@token',
+                        res.data.response.token
+                    );
+                }
                 dispatch({
                     type: 'LOGIN',
                     payload: res.data
@@ -33,8 +40,8 @@ const userActions = {
         };
     },
     logout: () => {
-
         return async (dispatch, getState) => {
+            await AsyncStorage.removeItem('@token');
             dispatch({
                 type: 'LOGOUT'
             })
@@ -54,7 +61,7 @@ const userActions = {
                             payload: res.data
                         })
                     } else {
-                        localStorage.removeItem('Token');
+                        AsyncStorage.removeItem('@token');
                     }
                 })
                 .catch(error => {
@@ -62,7 +69,7 @@ const userActions = {
                         dispatch({
                             type: 'LOGOUT'
                         });
-                        localStorage.removeItem('Token');
+                        AsyncStorage.removeItem('@token');
                     }
                 })
         }
