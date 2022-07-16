@@ -13,7 +13,6 @@ import itineraryActions from '../redux/actions/itineraryActions';
 
 const Itinerary = ({ route }) => {
     const itineraryID = route.params.id;
-    const cityID = route.params.city;
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const [activities, setActivities] = useState([]);

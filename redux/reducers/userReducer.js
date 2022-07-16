@@ -38,14 +38,19 @@ const userReducer = (state = initialState, action) => {
                     message: ''
                 };
             }
-
         case 'LOGOUT':
             return {
-                    ...state,
-                    userData: null,
-                    message: '',
-                    errors: []
-                };
+                ...state,
+                userData: null,
+                message: '',
+                errors: []
+            };
+        case 'CLEAN':
+            return {
+                ...state,
+                message: '',
+                errors: []
+            };
         default:
             return state;
     }
